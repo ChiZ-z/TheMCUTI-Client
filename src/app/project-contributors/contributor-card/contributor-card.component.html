@@ -1,0 +1,148 @@
+<div class="card-container" [ngClass]="{'moderator' : contributor.role == enum.constants.MODERATOR, 'author' : contributor.role == enum.constants.AUTHOR}">
+  <div class="select-block-outer" (click)="selectContributor()">
+    <div class="select-block-inner">
+      <label nz-checkbox [(ngModel)]="contributor.selected"></label>
+    </div>
+  </div>
+  <div class="image-block-outer">
+    <div class="image-block-inner">
+      <a routerLink="/profile/{{ contributor.contributor.username }}">
+        <img *ngIf="contributor.contributor.profilePhoto" [src]="contributor.contributor.imageToShow"
+          class="profile-image">
+        <div class="profile-image" *ngIf="!contributor.contributor.profilePhoto">
+          <tmc-icon [tmcIconSize]="'image-ex-large'" [tmcType]="'image'" [tmcIconType]="'default-user'"></tmc-icon>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="info-block-outer">
+    <div class="info-block-inner">
+      <div class="name-block">
+        <a class="router-link" routerLink="/profile/{{ contributor.contributor.username }}">
+          {{ contributor.contributor.firstName }} {{ contributor.contributor.lastName }}
+        </a>
+      </div>
+      <div class="info">
+        {{ contributor.contributor.username }} | <div class="block" [ngClass]="{'author-label' : contributor.role == enum.constants.AUTHOR}">
+          {{ 'role.'+contributor.role | translate }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="action-block-outer">
+    <div class="action-block-inner">
+      <nz-divider class="divider" nzType="vertical"  *ngIf="currentUserRole == enum.constants.AUTHOR && contributor.role != enum.constants.AUTHOR"></nz-divider>
+      <div class="action-item"  *ngIf="currentUserRole ==  enum.constants.AUTHOR && contributor.role != enum.constants.AUTHOR">
+        <div class="action-inner">
+          <a nzTitle="{{ 'edit.contributor.role' | translate }}"
+             nzPlacement="topRight"
+             nz-tooltip
+             (click)="showChangeModal()">
+            <tmc-icon [tmcIconType]="'pan'" [tmcIconSize]="'pre-medium'"></tmc-icon>
+          </a>
+        </div>
+      </div>
+      <nz-divider class="divider" nzType="vertical"></nz-divider>
+      <div class="action-item">
+        <div class="action-inner">
+          <a nzTitle="{{ 'notify.contributor' | translate }}"
+             nzPlacement="topRight"
+             nz-tooltip
+             (click)="showNotificationModal()">
+            <tmc-icon [tmcIconType]="'notification'" [tmcIconSize]="'medium'"></tmc-icon>
+          </a>
+        </div>
+      </div>
+      <nz-divider class="divider" nzType="vertical"></nz-divider>
+      <div class="action-item">
+        <div class="action-inner" [ngClass]="{'active' : showStats}">
+          <a nzTitle="{{ 'show.contributor.stats' | translate }}"
+             nzPlacement="topRight"
+             nz-tooltip
+             (click)="showContributorStats()">
+            <tmc-icon [tmcIconType]="'list'" [tmcIconSize]="'small'"></tmc-icon>
+          </a>
+        </div>
+      </div>
+      <nz-divider class="divider" nzType="vertical" *ngIf="currentUserRole ==  enum.constants.AUTHOR && contributor.role != enum.constants.AUTHOR"></nz-divider>
+      <div class="action-item" *ngIf="currentUserRole ==  enum.constants.AUTHOR && contributor.role != enum.constants.AUTHOR">
+        <div class="action-inner">
+          <a nzTitle="{{ 'delete.contributor' | translate }}"
+             nzPlacement="topRight"
+             nz-tooltip
+             nzCancelText="{{ 'cancel' | translate }}"
+             nzOkText="{{ 'delete.button' | translate }}"
+             nz-popconfirm
+             (nzOnConfirm)="deleteContributor()">
+            <tmc-icon [tmcIconType]="'trash'" [tmcIconSize]="'pre-medium'"></tmc-icon>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="stats-block" *ngIf="showStats && stats" [@slideIn]>
+  <div class="stats-item">
+    <div class="stats-name">{{'stat.translate' | translate}}</div>
+    <div class="stats-value">{{stats.translateCount}}</div>
+  </div>
+  <div class="stats-item">
+    <div class="stats-name">{{'stat.auto' | translate}}</div>
+    <div class="stats-value">{{stats.autoTranslateCount}}</div>
+  </div>
+  <div class="stats-item">
+    <div class="stats-name">{{'stat.edit' | translate}} </div>
+    <div class="stats-value">{{stats.editCount}}</div>
+  </div>
+  <div class="stats-item">
+    <div class="stats-name">{{'stat.edit.import' | translate}}</div>
+    <div class="stats-value">{{stats.editByImportCount}}</div>
+  </div>
+  <div class="stats-item">
+    <div class="stats-name">{{'stat.translate.import' | translate}}</div>
+    <div class="stats-value">{{stats.translateByImportCount}}</div>
+  </div>
+</div>
+
+<nz-modal [(nzVisible)]="isNotifyVisible" 
+          nzOkText="{{ 'notify.button' | translate }}"
+          nzTitle="{{ 'notify.contributor' | translate }}" 
+          nzCancelText="{{ 'cancel' | translate }}"
+          [(nzOkLoading)]="isMessageSending"
+          (nzOnCancel)="handleNotifyModalCancel()" 
+          (nzOnOk)="handleNotifyModalOk()">
+<form [formGroup]="notifyForm">
+  <nz-form-control class="mb-10 mt-10">
+    <textarea nz-input class="area" 
+              name="msg" 
+              autosize
+              autocomplete="off"
+              placeholder="{{ 'label.enter.message' | translate }}" 
+              formControlName="message">
+    </textarea>
+    <nz-form-explain *ngIf="notifyForm.get('message')?.dirty && notifyForm.get('message')?.errors">
+      {{ 'error.invalid.message' | translate }}
+    </nz-form-explain>
+  </nz-form-control>
+</form>
+</nz-modal>
+
+
+<nz-modal [(nzVisible)]="isChangeRoleVisible" 
+          nzOkText="{{ 'change.button' | translate }}"
+          nzTitle="{{ 'edit.contributor.role' | translate }}" 
+          nzCancelText="{{ 'cancel' | translate }}"
+          (nzOnCancel)="handleChangeModalCancel()" 
+          (nzOnOk)="handleChangeModalOk()">
+  <form [formGroup]="changeForm">
+  <nz-form-control class="mb-10 mt-10">
+     <nz-select name="contrRole" formControlName="role" nzPlaceHolder="{{ 'label.contributor.role' | translate }}">
+      <nz-option nzValue="{{ enum.constants.TRANSLATOR }}" nzLabel="{{ 'role.TRANSLATOR' | translate }}"></nz-option>
+      <nz-option nzValue="{{ enum.constants.MODERATOR }}" nzLabel="{{ 'role.MODERATOR' | translate }}"></nz-option>
+    </nz-select>
+    <nz-form-explain *ngIf="changeForm.get('role')?.dirty && changeForm.get('role')?.errors">
+      {{ 'error.choose.role' | translate }}
+    </nz-form-explain>
+  </nz-form-control>
+  </form>
+</nz-modal>

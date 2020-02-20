@@ -1,0 +1,51 @@
+<div class="settings-container">
+  <div class="settings-label">
+    {{ 'label.moderators.settings' | translate }}
+    <button class="primary-button add-translation-button" 
+            (click)="showAddModerator()" 
+            *ngIf="!isAddModeratorBlock"
+            nz-button
+            nzType="default">
+            <i nz-icon nzType="plus-circle" nzTheme="outline"></i>
+            {{ 'label.add.moderator' | translate }}
+    </button>
+  </div>
+  <div *ngIf="glossary" class="moderators">
+    <tmc-moderator-card [moderator]="glossary.author" [role]="enum.constants.GL_AUTHOR"></tmc-moderator-card>
+    <div *ngFor="let follower of glossary.followers">
+      <tmc-moderator-card [moderator]="follower.user" [role]="follower.role"></tmc-moderator-card>
+    </div>
+  </div>
+  <div *ngIf="isAddModeratorBlock && addModeratorForm">
+    <form [formGroup]="addModeratorForm">
+        <nz-form-control>
+          <nz-input-group>
+            <input nz-input class="form-input" 
+                  name="name" 
+                  autocomplete="off"
+                  formControlName="firstName" 
+                  placeholder="{{ 'first.name' | translate }}"/>
+          </nz-input-group>
+          <nz-form-explain *ngIf="addModeratorForm.get('firstName')?.dirty && addModeratorForm.get('firstName')?.errors">
+            {{ 'error.invalid.value' | translate }}
+          </nz-form-explain>
+        </nz-form-control>   
+        <nz-form-control>
+          <nz-input-group>
+            <input nz-input class="form-input" 
+                  name="name" 
+                  autocomplete="off"
+                  formControlName="email" 
+                  placeholder="{{ 'email' | translate }}"/>
+          </nz-input-group>
+          <nz-form-explain *ngIf="addModeratorForm.get('email')?.dirty && addModeratorForm.get('email')?.errors">
+            {{ 'error.invalid.value' | translate }}
+          </nz-form-explain>
+        </nz-form-control>   
+        <div class="buttons-block">
+           <button nz-button type="submit" nzType="primary" class="primary-button" [(nzLoading)]="isMessageSending" (click)="sendInvite()">{{ 'add.button' | translate }}</button>
+           <button class="default-button ml-10" nz-button (click)="closeAddForm()">{{ 'cancel' | translate }}</button>
+        </div>     
+      </form>
+  </div>
+</div>

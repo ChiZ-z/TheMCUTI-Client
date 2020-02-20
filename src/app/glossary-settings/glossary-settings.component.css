@@ -1,0 +1,59 @@
+.settings-container {
+    /* display: flex; */
+    width: 1200px;
+    margin: 0 auto;
+    min-height: 100px;
+    margin-left: calc((100vw - 1200px)/2);
+}
+
+.all-settings-label {
+    width: 1200px;
+    padding: 24px 0px;
+    font-family: Roboto-Regular;
+    font-size: 25px;
+    color: rgb(136, 135, 135);
+    display: flex;
+    margin-bottom: 10px;
+    border-bottom: 1px solid grey;
+}
+
+.glossary-name-label {
+    font-weight: bold;
+    color: black;
+    margin-left: 10px;
+}
+
+.all-settings-container {
+    width: 1200px;
+    margin-top: 30px;
+    display: flex;
+}
+
+.route-link {
+    display: block;
+    width: 250px;
+    padding: 5px 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    color: grey;
+    font-size: 16px;
+}
+
+.route-link:hover {
+    background-color: rgb(236, 235, 235);
+    color: grey;
+}
+
+.routes-block {
+    width: 300px;
+    min-height: 200px;
+}
+
+.outlet {
+    width: 900px;
+}
+
+.active {
+    background-color: rgb(236, 235, 235);
+    color: #4a63bf;
+}

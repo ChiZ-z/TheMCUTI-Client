@@ -1,0 +1,171 @@
+<div class="contributors-container">
+  <div class="action-block">
+    <div class="filter-block">
+      <div class="filter-block-inner">
+        <nz-input-group class="search-input" [nzPrefix]="prefixIconSearch">
+        <input type="text" [(ngModel)]="searchValue"
+                          nz-input placeholder="{{'search' | translate}}"
+                          (ngModelChange)="filterProjectContributors()"
+                          (keydown.enter)="filterProjectContributors()">
+        </nz-input-group>
+        <ng-template #prefixIconSearch>
+          <i nz-icon type="search"></i>
+        </ng-template>
+        {{ 'order'| translate }}
+        <nz-dropdown class="block" [nzTrigger]="'click'">
+          <a nz-dropdown class="drop-link">
+            {{ sortViewValue | translate }} <i nz-icon type="down"></i>
+          </a>
+          <ul nz-menu>
+            <li nz-menu-item (click)="setSortValueAndView(enum.constants.USERNAME, 'sort.username')">
+              {{ 'sort.username' | translate }}
+            </li>
+            <li nz-menu-item (click)="setSortValueAndView(enum.constants.USERFIRSTNAME, 'sort.first.name')">
+              {{ 'sort.first.name' | translate }}
+            </li>
+            <li nz-menu-item (click)="setSortValueAndView(enum.constants.USERLASTNAME, 'sort.surname')">
+              {{ 'sort.surname' | translate }}
+            </li>
+          </ul>
+        </nz-dropdown>
+        <tmc-icon [tmcIconType]="'filter'" class="ml-20"></tmc-icon>
+        <nz-dropdown class="block ml-5" [nzTrigger]="'click'">
+          <a nz-dropdown class="drop-link">
+            {{ filterRoleView | translate }} <i nz-icon type="down"></i>
+          </a>
+          <ul nz-menu>
+            <li nz-menu-item (click)="setFilterRole(null, 'show.all')">
+              {{ 'show.all' | translate }}
+            </li>
+            <li nz-menu-item (click)="setFilterRole(enum.constants.AUTHOR, 'label.authors')">
+              {{ 'label.authors' | translate }}
+            </li>
+            <li nz-menu-item (click)="setFilterRole(enum.constants.MODERATOR, 'label.moderators')">
+              {{ 'label.moderators' | translate }}
+            </li>
+            <li nz-menu-item (click)="setFilterRole(enum.constants.TRANSLATOR, 'label.translators')">
+              {{ 'label.translators' | translate }}
+            </li>
+           
+          </ul>
+        </nz-dropdown>
+      </div>
+    </div>
+    <div class="button-block">
+      <div class="button-block-inner">
+        <button nz-button nzType="default" *ngIf="contributorsList && contributorsList.length > 0" class="default-button" (click)="showAllNotificationModal()">{{ 'label.notify.contributors' | translate }}</button>
+        <button nz-button nzType="primary" *ngIf="currentUserRole == enum.constants.AUTHOR" class="primary-button ml-10" (click)="showAddContributorModal()">{{ 'label.add.contributor' | translate }}</button>
+      </div>
+    </div>
+  </div>
+  <div class="loading-block" *ngIf="isRequestProcessing">
+    <nz-spin nzSimple class="loading" [nzSize]="'large'"></nz-spin>
+  </div>
+  <div *ngIf="isNothingFound && !isRequestProcessing">
+    <nz-alert nzType="info" nzMessage="{{ 'info.nothing.found' | translate }}"></nz-alert>
+  </div>
+  <div *ngIf="isNoContributors && !isRequestProcessing">
+    <nz-alert nzType="info" nzMessage="{{ 'info.no.contributors' | translate }}"></nz-alert>
+  </div>
+  <div *ngFor="let contr of contributorsList">
+    <tmc-contributor-card [(contributor)]="contr" [currentUserRole]="currentUserRole"></tmc-contributor-card>
+  </div>
+
+  <div class="left-block"></div>
+      <div class="pagination-block" *ngIf="!isRequestProcessing && contrPageParams && contrPageParams.pageCount!=0">
+        <nz-pagination (nzPageIndexChange)="pageIndexChange($event)" 
+                      (nzPageSizeChange)="pageSizeChange($event)"
+                      [nzSize]="'small'" 
+                      [(nzPageIndex)]="currentPage" 
+                      [nzTotal]="contrPageParams.size"
+                      [(nzPageSize)]="currentPageSize" 
+                      nzShowSizeChanger>
+        </nz-pagination>
+      </div>
+      <div class="sticky-ex" *ngIf="!isRequestProcessing && contrPageParams && contrPageParams.pageCount!=0">
+          <tmc-stick [config]="config"
+                     (action)="chooseAction($event)"
+                     [selectedCount]="countSelectedContributors()">
+          </tmc-stick>
+      </div>
+</div>
+
+<nz-modal [(nzVisible)]="isAddModalVisible" 
+          nzOkText="{{ 'add.button' | translate }}"
+          nzTitle="{{ 'label.add.contributor' | translate }}" 
+          nzCancelText="{{ 'cancel' | translate }}"
+          (nzOnCancel)="handleAddModalCancel()" 
+          (nzOnOk)="handleAddModalOk()">
+<form [formGroup]="addContributorForm">
+  <nz-form-control class="mb-10 mt-10">
+    <input nz-input class="form-input" 
+           name="name" 
+           [nzAutocomplete]="auto"
+           placeholder="{{ 'label.contr.username' | translate }}" 
+           formControlName="username" />
+           <nz-autocomplete nzBackfill #auto>
+             <nz-auto-option *ngFor="let user of freeUsersList" [nzValue]="user.username">
+               {{ user.username }} ({{ user.firstName }} {{ user.lastName }})
+             </nz-auto-option>
+           </nz-autocomplete>
+    <nz-form-explain *ngIf="addContributorForm.get('username')?.dirty && addContributorForm.get('username')?.errors">
+      {{ 'error.enter.contr.username' | translate }}
+    </nz-form-explain>
+  </nz-form-control>
+  <nz-form-control class="mb-10">
+    <nz-select name="contrRole" formControlName="role" nzPlaceHolder="{{ 'label.contributor.role' | translate }}">
+      <nz-option nzValue="TRANSLATOR" nzLabel="{{ 'role.TRANSLATOR' | translate }}"></nz-option>
+      <nz-option nzValue="MODERATOR" nzLabel="{{ 'role.MODERATOR' | translate }}"></nz-option>
+    </nz-select>
+    <nz-form-explain *ngIf="addContributorForm.get('role')?.dirty && addContributorForm.get('role')?.errors">
+      {{ 'error.choose.role' | translate }}
+    </nz-form-explain>
+  </nz-form-control>
+</form>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="isNotifyAllVisible" 
+          nzOkText="{{ 'notify.button' | translate }}"
+          nzTitle="{{ 'notify.contributors' | translate }}" 
+          nzCancelText="{{ 'cancel' | translate }}"
+          [(nzOkLoading)]="isMessageSending"
+          (nzOnCancel)="handleNotifyAllModalCancel()" 
+          (nzOnOk)="handleNotifyAllModalOk()">
+  <form [formGroup]="notifyForm">
+  <nz-form-control class="mb-10 mt-10">
+    <textarea nz-input class="area" 
+           name="msg" 
+           autosize
+           autocomplete="off"
+           placeholder="{{ 'label.enter.message' | translate }}" 
+           formControlName="message">
+    </textarea>
+    <nz-form-explain *ngIf="notifyForm.get('message')?.dirty && notifyForm.get('message')?.errors">
+      {{ 'error.invalid.message' | translate }}
+    </nz-form-explain>
+  </nz-form-control>
+  </form>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="isNotifySelectedVisible" 
+          nzOkText="{{ 'notify.button' | translate }}"
+          nzTitle="{{ 'notify.selected.contributors' | translate }}" 
+          nzCancelText="{{ 'cancel' | translate }}"
+          [(nzOkLoading)]="isMessageSending"
+          (nzOnCancel)="handleNotifySelectedModalCancel()" 
+          (nzOnOk)="handleNotifySelectedModalOk()">
+  <form [formGroup]="notifyForm">
+  <nz-form-control class="mb-10 mt-10">
+    <textarea nz-input class="area" 
+           name="msg" 
+           autosize
+           autocomplete="off"
+           placeholder="{{ 'label.enter.message' | translate }}" 
+           formControlName="message">
+    </textarea>
+    <nz-form-explain *ngIf="notifyForm.get('message')?.dirty && notifyForm.get('message')?.errors">
+      {{ 'error.invalid.message' | translate }}
+    </nz-form-explain>
+  </nz-form-control>
+  </form>
+</nz-modal>

@@ -1,0 +1,3 @@
+<img *ngIf="tmcType === 'icon'" class="{{tmcIconSize}}" src="/assets/icons/{{ tmcIconType + getSufix() }}.icon.svg">
+<img *ngIf="tmcType === 'image'" class="{{tmcIconSize}}" src="/assets/images/{{ tmcIconType }}.png">
+<img *ngIf="tmcType === 'flag'" class="{{tmcIconSize}}" src="/assets/flags/{{ tmcIconType }}">

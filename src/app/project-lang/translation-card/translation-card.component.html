@@ -1,0 +1,259 @@
+<div class="card-container" [ngClass]="{'changed' : checkFlag(enum.constants.DEFAULT_WAS_CHANGED)}">
+  <div class="select-block" (click)="selectTranslation()" *ngIf="!translation.isRequestProcessing">
+      <label nz-checkbox [(ngModel)]="translation.selected"></label>
+  </div>
+  <div class="select-block" *ngIf="translation.isRequestProcessing"><nz-spin nzSimple></nz-spin></div>
+  <div class="term-block-outer">
+   <div class="term-block-inner">
+     <div class="block">
+        <div class="term-reference"
+            (click)="utilService.copyString(translation.term.referenceValue)" 
+            *ngIf="translation.term.referenceValue">
+          <div>{{ translation.term.referenceValue }}</div>
+        </div>
+        <div class="term-reference-empty" *ngIf="!translation.term.referenceValue">
+          --{{ 'reference.empty' | translate }}--
+        </div>
+        <div class="term-content" (click)="utilService.copyString(translation.term.termValue)">
+          {{ translation.term.termValue }}
+        </div>
+      </div>
+      <div class="comment-outer">
+        <div class="comment-action-item" [ngClass]="{'action-active' : isCommentShown}">
+          <a (click)="showTermComments()"
+            nzTitle="{{ (isCommentShown ? 'hide.comments' : 'show.comments') | translate }}"
+            nzPlacement="topRight"
+            nz-tooltip>
+            <tmc-icon [tmcIconType]="'comment'" [tmcIconSize]="'medium'"></tmc-icon> {{ translation.term.commentsCount }}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+ <div class="divider-block">
+      <nz-divider class="divider" nzType="vertical"></nz-divider>
+  </div>
+   <div class="translation-block-outer">
+    <div class="translation-block-inner">
+      <div class="translation-content">
+        <div class="translation-content-inner">
+          <div class="translation-value" 
+               (click)="chooseUpdate()"
+               [ngClass]="{'changed-color' : checkFlag(enum.constants.DEFAULT_WAS_CHANGED)}"
+               *ngIf="translation.value != '' && !isEditing">
+            <div>{{ translation.value }}</div>
+          </div>
+          <textarea class="edit-area"
+                    [(ngModel)]="translation.buffer"
+                    (focusout)="updateTranslationsValue()"
+                    autosize
+                    nz-input
+                    placeholder="{{ 'label.enter.translation' | translate }}"
+                    *ngIf="translation.value == '' && !isEditing">
+          </textarea>
+          <textarea class="edit-area"
+                    tmcAutoFocus
+                    autosize
+                    nz-input
+                    (focusout)="updateTranslationsValue()"
+                    [(ngModel)]="translation.buffer"
+                    *ngIf="isEditing">
+          </textarea>
+          <div class="error-block" *ngIf="translation.saveError">
+            <tmc-icon [tmcIconType]="'exclamation'" [tmcIconSize]="'extra-small'"></tmc-icon>
+            {{ 'cannot.save.translation' | translate }}
+          </div>
+        </div>
+      </div>
+      <div class="additional-block">
+        <div class="additional-block-inner">
+          <a nzTitle="{{ 'show.default.changed' | translate }}"
+             nzPlacement="topRight"
+             (click)="showDropFlagAlert(template)"
+             *ngIf="checkFlag(enum.constants.DEFAULT_WAS_CHANGED)"
+             nz-tooltip>
+            <div class="edited-item">
+              E
+            </div>
+          </a>
+          <div class="copy" 
+            nzTitle="{{ 'copy.term' | translate }}"
+            nzPlacement="topRight"
+            nz-tooltip>
+          <nz-dropdown [nzTrigger]="'click'">
+          <a nz-dropdown>
+            <tmc-icon  [tmcIconType]="'copy'" [tmcIconSize]="'medium'"></tmc-icon>
+          </a>
+          <ul nz-menu>
+            <li nz-menu-item (click)="utilService.copyString(translation.value)">{{ 'label.copy.value' | translate }}</li>
+            <li nz-menu-item (click)="utilService.copyJSON(translation)">JSON</li>
+            <li nz-menu-item (click)="utilService.copyProperties(translation)">Properties</li>
+          </ul>
+          </nz-dropdown>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="divider-block">
+      <nz-divider class="divider" nzType="vertical"></nz-divider>
+  </div>
+  <div class="action-block-outer">
+    <div class="action-block-inner">
+      <div class="action-content">
+        <a class="block mr-5"
+           nzPlacement="topRight" 
+           (click)="fuzzy()"
+           nzTitle="{{ getFuzzyTitle() | translate }}"
+           nz-tooltip>
+          <div class="action-item" [ngClass]="{'fuzzy' : checkFlag(enum.constants.FUZZY)}">
+            F
+          </div>
+        </a>
+        <a class="block mr-5"
+           nzPlacement="topRight"
+           nzTitle="{{ 'auto.translate' | translate }}"
+           nz-tooltip
+           nzCancelText="{{ 'cancel' | translate }}"
+           nzOkText="{{ 'translate.button' | translate }}"
+           nz-popconfirm
+           (nzOnConfirm)="autoTranslate()">
+          <div class="action-item" [ngClass]="{'autotranslated' : checkFlag(enum.constants.AUTOTRANSLATED)}">
+            A
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="divider-block">
+      <nz-divider class="divider" nzType="vertical"></nz-divider>
+  </div>
+  <div class="list-block">
+    <div class="list-block-inner">
+      <div class="action" [ngClass]="{'active' : isHistoryVisible}" *ngIf="!isRequestProcessing">
+        <a nzTitle="{{ (isHistoryVisible ? 'label.hide.translaton.history' : 'label.show.translaton.history') | translate }}"
+           nzPlacement="topRight"
+           nz-tooltip
+           (click)="isHistoryVisible ? hideTranslationHistory() : showTranslationHistory()">
+          <tmc-icon [tmcIconType]="'list'" [tmcIconSize]="'small'"></tmc-icon>
+        </a>
+      </div>
+      <div *ngIf="isRequestProcessing" class="history-spin">
+        <nz-spin nzSimple class="loading" [nzSize]="'medium'"></nz-spin>
+      </div>
+    </div>
+  </div>
+  <div class="photo-block-outer">
+    <div class="photo-block-inner">
+      <div class="photo-content">
+        <a nzTitle="{{ 'label.last.edit.by' | translate }} {{ translation.modifier.firstName }} {{ translation.modifier.lastName }} {{ translation.modifiedDate }}"
+           nzPlacement="topRight" 
+           routerLink="/profile/{{ translation.modifier.username }}"
+           nz-tooltip>
+          <img *ngIf="translation.modifier.profilePhoto" 
+               [src]="translation.modifier.imageToShow" 
+               class="profile-image">
+          <div class="profile-image ml-10" *ngIf="!translation.modifier.profilePhoto">
+            <tmc-icon [tmcIconSize]="'image-large'" [tmcType]="'image'" [tmcIconType]="'default-user'"></tmc-icon>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div> 
+</div>
+<!-- <div class="loading-block" *ngIf="isRequestProcessing">
+    <nz-spin nzSimple class="loading" [nzSize]="'large'"></nz-spin>
+  </div> -->
+<div class="translations-history" *ngIf="isHistoryVisible" [@slideIn]>
+ <div class="translations-history-inner">
+ <nz-alert nzType="info" *ngIf="historyList.length == 0 && !isRequestProcessing" nzMessage="{{ 'label.no.history' | translate }}"></nz-alert>
+ <div class="imported-value" *ngFor="let hist of historyList">
+    <ul class="list">
+      <li>
+        <div class="block w-80">
+          <div *ngFor="let diff of hist.differenceArray" class="diff-block">
+            <div [ngClass]="{'added' : diff.added == true,'removed' : diff.removed == true, 'diff-value' : !diff.removed && !diff.added}">{{ diff.value}}</div>
+          </div>
+        </div>
+        <div class="block w-20 ta-c">
+          <a (click)="restoreValue(hist)">{{ 'label.restore.value' | translate }}</a>
+        </div>
+      </li>
+    </ul>
+  </div>
+  </div>
+</div>
+
+<div class="comments-block" *ngIf="isCommentShown" [@slideIn]>
+    <div class="add-comment-block">
+      <div class="author-image-block">
+        <a nzTitle="{{ currentUser.firstName }} {{ currentUser.lastName }}"
+           nzPlacement="topLeft"
+           nz-tooltip
+           routerLink="/profile/{{ currentUser.username }}"
+           class="mr-5"
+           *ngIf="currentUser">
+        <img *ngIf="currentUser.profilePhoto && currentUser.imageToShow" 
+              [src]="currentUser.imageToShow" 
+              class="comment-profile-image">
+        <div class="comment-profile-image" *ngIf="!currentUser.profilePhoto || !currentUser.imageToShow">
+          <tmc-icon [tmcIconSize]="'pre-medium'" [tmcType]="'image'" [tmcIconType]="'default-user'"></tmc-icon>
+        </div>
+        </a>
+      </div>
+      <div class="comment-input">
+        <input nz-input 
+               class="coment-input-field" 
+               (keyup.enter)="addComment()"
+               placeholder="{{ 'label.enter.comment' | translate }}" 
+               [(ngModel)]="commentValue" />
+      </div>
+    </div>
+    <div class="comments-block-inner">
+      <div class="comment-item mt-5" *ngFor="let comment of translation.term.comments">
+        <div class="comment-text">{{ comment.text }}</div>
+        <div class="delete-block" *ngIf="checkDeleteRights(comment)">
+            <a nzTitle="{{ 'delete.comment' | translate }}"
+               nzPlacement="topRight"
+               nz-tooltip
+               nzCancelText="{{ 'cancel' | translate }}"
+               nzOkText="{{ 'delete.button' | translate }}"
+               nz-popconfirm
+               (nzOnConfirm)="deleteComment(comment)">
+              <tmc-icon [tmcIconType]="'trash'" [tmcIconSize]="'small'"></tmc-icon>
+            </a>
+        </div>
+        <div class="comment-info-block va-t">
+          <a nzTitle="{{ comment.author.firstName }} {{ comment.author.lastName }}"
+             nzPlacement="topLeft"
+             nz-tooltip
+             routerLink="/profile/{{ comment.author.username }}"
+             class="mr-5"
+             *ngIf="comment.author">
+           <img *ngIf="comment.author.profilePhoto && comment.author.imageToShow" 
+               [src]="comment.author.imageToShow" 
+               class="comment-profile-image">
+            <div class="comment-profile-image" *ngIf="!comment.author.profilePhoto">
+              <tmc-icon [tmcIconSize]="'pre-medium'" [tmcType]="'image'" [tmcIconType]="'default-user'"></tmc-icon>
+            </div>
+          </a>
+          <div class="date">{{ comment.creationDate }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<ng-template #template let-notification>
+  <div class="ant-notification-notice-content">
+    <div>
+      <div class="ant-notification-notice-message">{{ enum.constants.WARNING_TITLE | translate }}</div>
+      <div class="ant-notification-notice-description">
+        {{ 'label.drop.def.flag' | translate }}
+      </div>
+      <span class="ant-notification-notice-btn">
+        <button class="cancel" (click)="notification.close()">{{ 'cancel' | translate }}</button>
+        <button nz-button nzType="danger" class="delete-button" (click)="dropDefFlag()">{{ 'label.drop' | translate }}</button>
+      </span>
+    </div>
+  </div>
+</ng-template>

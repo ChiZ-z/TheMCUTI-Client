@@ -1,0 +1,72 @@
+<div class="login-container">
+    <div class="outer-block">
+        <div class="left">
+            <div class="left-top"></div>
+            <div class="left-middle">
+                <div class="form-container">
+                    <div class="enter-title">{{ 'label.log.into' | translate }}</div>
+                    <div class="info-block">
+                        {{ 'label.dont.registred' | translate }}
+                        <a routerLink="/registration">{{ 'label.create.account' | translate }}</a>
+                    </div>
+                    <form class="form" [formGroup]="loginForm">
+                        <nz-alert *ngIf="isError" nzType="error" class="mb-10"
+                            nzMessage="{{ 'incorrect.login' | translate }}"></nz-alert>
+                        <nz-form-control class="mb-10">
+                            <nz-input-group [nzPrefix]="loginPrefix">
+                                <input nz-input placeholder="{{ 'label.username.or.mail' | translate }}"
+                                    formControlName="login" type="text" name="username" />
+                            </nz-input-group>
+                            <ng-template #loginPrefix>
+                                <i nz-icon class="icon" type="user"></i>
+                            </ng-template>
+                            <nz-form-explain *ngIf="loginForm.get('login')?.dirty && loginForm.get('login')?.errors">
+                                {{ 'error.invalid.value' | translate }}
+                            </nz-form-explain>
+                        </nz-form-control>
+                        <nz-form-control class="mb-10">
+                            <nz-input-group [nzPrefix]="passPrefix">
+                                <input type="password" nz-input placeholder="{{ 'form.password' | translate }}"
+                                    formControlName="password" />
+                            </nz-input-group>
+                            <ng-template #passPrefix>
+                                <i nz-icon class="icon" type="lock"></i>
+                            </ng-template>
+                            <nz-form-explain
+                                *ngIf="loginForm.get('password')?.dirty && loginForm.get('password')?.errors">
+                                {{ 'error.invalid.value' | translate }}
+                            </nz-form-explain>
+                        </nz-form-control>
+                        <button nz-button nzType="primary" (click)="login()" class="primary-button login-button">
+                            {{ 'login.button' | translate }}
+                        </button>
+                    </form>
+                    <div class="socials-label">
+                        <hr class="mr-5">{{ 'label.enter.as.user' | translate }}
+                        <hr class="ml-5">
+                    </div>
+                    <div class="socials">
+                        <a class="social-link" href="{{googleRegistrationURL}}"><i nz-icon nzType="google"
+                                nzTheme="outline"></i></a>
+                        <a class="social-link" href="{{githubRegistrationURL}}"><i nz-icon nzType="github"
+                                nzTheme="outline"></i></a>
+                        <a class="social-link" href="{{facebookRegistrationURL}}"><i nz-icon nzType="facebook"
+                                nzTheme="outline"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="left-bottom"></div>
+        </div>
+        <div class="right">
+            <div class="right-top"></div>
+            <div class="right-middle">
+                <div class="text-block">
+                    <div class="text-title">TheMCUTI</div>
+                    <div class="text-body">{{ 'label.login.info' | translate }}</div>
+                </div>
+                <div class="border"></div>
+            </div>
+            <div class="right-bottom"></div>
+        </div>
+    </div>
+</div>

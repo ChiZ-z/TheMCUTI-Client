@@ -1,0 +1,223 @@
+.projects-container {
+    width: 100gh;
+    min-width: 1200px;
+    min-height: calc(100vh - 80px);
+    background-color: #F9F9F9;
+}
+
+.projects-content {
+    margin: 0 auto 0 auto;
+    margin-left: calc((100vw - 1200px)/2);
+    width: 1200px;
+    min-height: 400px;
+    padding-bottom: 30px;
+}
+
+.projects-info-bar {
+    width: 100gh;
+    min-width: 1200px;
+    height: 75px;
+    background: linear-gradient(270.44deg, #71C8B9 0.73%, #729EA1 102.3%);
+}
+
+.projects-info-bar-inner {
+    width: 1200px;
+    margin: 0 auto 0 auto;
+    margin-left: calc((100vw - 1200px)/2);
+    height: 75px;
+}
+
+.progress-block {
+    float: right;
+    height: 75px;
+    min-width: 100px;
+    padding: 0 0 0 20px;
+}
+
+.info-block {
+    height: 75px;
+    float: left;
+    min-width: 300px;
+    padding: 0;
+}
+
+.progress-cell {
+    min-width: 100px;
+    height: 75px;
+    display: flex;
+    align-items: center;
+    font-family: Montserrat-Medium;
+    font-size: 16px;
+    color: white;
+}
+
+.projects-progress {
+    width: 100px;
+}
+
+.divider {
+    margin: 2px 12px 0 10px;
+    width: 1px;
+    height: 15px;
+}
+
+.progress-line {
+    min-width: 150px;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.info-item {
+    min-width: 100px;
+    height: 75px;
+    display: inline-flex;
+    align-items: center;
+    font-size: 17px;
+    font-family: Montserrat-Medium;
+    font-style: normal;
+    color: white;
+    text-transform: lowercase;
+}
+
+.percents {
+    color: white;
+    font-size: 14px;
+    margin-right: 5px;
+    display: inline-block;
+}
+
+.tab-bar-outer {
+    width: 100gh;
+    background-color: #fff;
+    height: 49px;
+    border-bottom: 1px solid rgb(218, 217, 217);
+}
+
+.tab-bar-inner {
+    width: 1200px;
+    margin: 0 auto 0 auto;
+    margin-left: calc((100vw - 1200px)/2);
+    background-color: #fff;
+    height: 49px;
+    border-bottom: 1px solid rgb(218, 217, 217);
+}
+
+.button-container {
+    float: right;
+    height: 100%;
+}
+
+.button-inner-container {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+::ng-deep .ant-tabs-ink-bar {
+    height: 3px;
+}
+
+/* ::ng-deep .ant-tabs-nav .ant-tabs-tab {
+    padding: 15px 20px;
+    text-transform: uppercase;
+} */
+
+.tab-set {
+    width: 500px;
+    text-transform: uppercase;
+}
+
+.search-panel {
+    width: 1200px;
+    height: 50px;
+}
+
+.search-block {
+    width: 880px;
+    height: 50px;
+    float: left;
+    margin-right: 20px;
+}
+
+.search-block-inner {
+    width: 880px;
+    height: 50px;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.sort-block {
+    display: inline-block;
+    width: 300px;
+}
+
+.sort-inner {
+    height: 50px;
+    width: 300px;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: right;
+    font-size: 14px;
+}
+
+.select-width {
+    width: 230px;
+}
+
+.select-order {
+    margin-left: 5px;
+}
+
+.drop-link {
+    color: rgb(85, 83, 83);
+}
+
+.loading-block {
+    width: 1200px;
+    height: 50px;
+    text-align: center;
+    margin: 0 auto 0 auto;
+}
+
+.pagination-block {
+    width: 1200px;
+    text-align: center;
+    margin: 30px auto 0px auto;
+}
+
+.project-list {
+    width: 1200px;
+    text-align: center;
+    margin: 0 auto 0 auto;
+    min-height: 40px;
+}
+
+.form-label {
+    font-size: 16px;
+    margin-bottom: 5px;
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+.form-label-first {
+    font-size: 16px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.nothing-found-block {
+    width: 1200px;
+    padding: 10px 10px 20px 10px;
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-family: calibri;
+}
+
+.form-area {
+    min-height: 60px;
+    max-height: 400px;
+}
+
+nz-form-control {
+    margin-bottom: 7px;
+}

@@ -1,0 +1,22 @@
+<div class="error-container">
+  <div class="error-content">
+    <div class="left">
+      <div class="left-top"></div>
+      <div class="left-middle">
+        <div class="error">{{ error }}</div>
+      </div>
+      <div class="left-bottom"></div>
+    </div>
+    <div class="right">
+      <div class="right-top"></div>
+      <div class="right-middle">
+        <div class="border"></div>
+        <div class="text-block">
+          <div class="text">{{ 'error.' + error + '.text' | translate}}</div>
+          <div class="action"><a (click)="goBack()" class="link">{{ 'title.go.back' | translate }}</a></div>
+        </div>
+      </div>
+      <div class="right-bottom"></div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,42 @@
+.info-content{
+    min-height: 20px;
+}
+
+.info-container {
+    min-height: 300px;
+    width: 1200px;
+    margin: 0 auto 0 auto;
+    margin-left: calc((100vw - 1200px)/2);
+}
+
+.label {
+    min-height: 50px;
+    padding: 10px 0 3px 10px;
+    font-family: NotoSans-Bold;
+    font-size: 13px;
+    border-bottom: 3px solid rgba(0, 0, 0, 0.09);
+    margin-bottom: 7px;
+    text-transform: uppercase;
+    color: rgb(138, 136, 136);
+}
+
+.label-text {
+    display: inline-block;
+    width: 700px;
+    height: 30px;
+}
+
+.action {
+    display: inline-block;
+    width: 490px;
+    text-align: right;
+    height: 30px;
+}
+
+nz-form-control{
+    margin-bottom: 10px;
+}
+
+.area {
+    max-height: 300px;
+}

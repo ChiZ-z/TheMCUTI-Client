@@ -1,0 +1,71 @@
+<div class="search-container">
+  <div class="search-info-bar">
+    <div class="search-info-bar-outer">
+      <div class="search-info-bar-inner" *ngIf="resultSearch && searchValue">
+        <div class="searched-count">
+          <div class="searched-title">{{ 'label.searched' | translate }}:</div>
+          <div class="searched-amount">{{ resultSearch.termsCount }} {{ getTermsAmountTitle() | translate }} |
+             {{ resultSearch.translationCount }} {{ 'label.translations.count' | translate }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="tab-bar-outer">
+    <div class="tab-bar-inner">
+      <div class="tab-set">
+        <nz-tabset>
+          <nz-tab nzTitle="{{ 'show.all' | translate }}" (nzClick)="setSearchListType('ALL')">
+          </nz-tab>
+          <!-- <nz-tab nzTitle="Projects" (nzClick)="setSearchListType('PROJECTS')">
+          </nz-tab> -->
+          <nz-tab nzTitle="{{ 'label.terms' | translate }}" (nzClick)="setSearchListType('TERMS')">
+          </nz-tab>
+          <nz-tab nzTitle="{{ 'label.translations' | translate }}" (nzClick)="setSearchListType('TRANSLATIONS')">
+          </nz-tab>
+        </nz-tabset>
+      </div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="search-block">
+      <div class="search-block-inner">
+        <nz-input-group [nzPrefix]="prefixIconSearch">
+          <input type="text" 
+                [(ngModel)]="searchValue" 
+                nz-input 
+                (ngModelChange)="search()"
+                class="input-field"
+                placeholder="{{'search' | translate}}"
+                (keydown.enter)="search()">
+        </nz-input-group>
+        <ng-template #prefixIconSearch>
+          <i nz-icon type="search"></i>
+        </ng-template>
+      </div>
+    </div>
+    <div class="loading-block" *ngIf="isRequestProcessing">
+      <nz-spin nzSimple [nzSize]="'large'"></nz-spin>
+    </div>
+    <div *ngIf="isNothingFound">
+      <nz-alert nzType="info" nzMessage="{{ 'info.nothing.found' | translate }}"></nz-alert>
+    </div>
+    <div class="search-content" *ngIf="searchItemList">
+      <div *ngFor="let item of searchItemList">
+        <tmc-search-card [searchItem]="item" [searchValue]="searchValue"></tmc-search-card>
+      </div>
+      <div class="pagination-block" *ngIf="searchValue && paginationInfo && paginationInfo.pageCount!=0 && !isNothingFound && !isNoSearch && !isRequestProcessing">
+          <nz-pagination (nzPageIndexChange)="pageIndexChange($event)" 
+                         (nzPageSizeChange)="pageSizeChange($event)"
+                         [nzSize]="'small'" 
+                         [(nzPageIndex)]="currentPage" 
+                         [(nzTotal)]="paginationInfo.size"
+                         [(nzPageSize)]="currentPageSize" 
+                         nzShowSizeChanger>
+          </nz-pagination>
+        </div>
+        <div class="start-info" *ngIf="isNoSearch">
+            <nz-alert nzType="success" nzMessage="{{ 'info.search.start' | translate }}"></nz-alert>
+        </div>
+    </div>  
+  </div>
+</div>

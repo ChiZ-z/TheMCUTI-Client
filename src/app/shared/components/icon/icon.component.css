@@ -1,0 +1,63 @@
+.icon {
+    height: 20px;
+    width: 19px;
+}
+
+.ultra-large {
+    height: 102px;
+    width: 102px;
+}
+
+.large {
+    height: 32px;
+    width: 32px;
+}
+
+.ex-large {
+    height: 43px;
+    width: 43px; 
+}
+
+.image-large {
+    height: 26px;
+    width: 26px; 
+}
+
+.image-ex-large {
+    height: 46px;
+    width: 46px; 
+}
+
+.image-prof {
+    width: 90px;
+    height: 90px;
+}
+
+.medium {
+    height: 24px;
+    width: 24px;
+}
+
+.small {
+    height: 18px;
+    width: 18px;
+}
+
+.pre-medium {
+    height: 20px;
+    width: 20px;
+}
+
+.extra-small {
+    height: 12px;
+    width: 12px;
+}
+
+.red {
+    fill: red;
+}
+
+.flag-small {
+    cursor: pointer;
+    outline: none;
+}

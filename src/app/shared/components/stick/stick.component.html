@@ -1,0 +1,41 @@
+<div class="stick-container">
+  <div class="stick-container-inner">
+    <div class="selected-count" *ngIf="selectedCount!=0">{{ selectedCount }}</div> 
+    <div class="selected-block" *ngIf="selectedCount!=0">
+      {{ 'label.selected' | translate }}
+    </div>
+    <nz-divider class="divider" *ngIf="selectedCount!=0" nzType="vertical"></nz-divider>
+    <div class="select-block">
+      <a class="link" (click)="event('selectAll')">
+        {{ 'select.all' | translate }}
+      </a>
+    </div>
+    <nz-divider class="divider" *ngIf="selectedCount!=0" nzType="vertical"></nz-divider>
+    <div *ngFor="let conf of config" class="block">
+      <div class="action-item" *ngIf="selectedCount!=0">
+        <a nzTitle="{{ conf.tooltipCode | translate }}"
+           nzPlacement="topRight"
+           nz-popconfirm
+           nzCancelText="{{conf.popupCancel | translate}}"
+           nzOkText="{{conf.popupOk | translate}}"
+           [nzCondition]="!conf.popup"
+           (nzOnConfirm)="event(conf.actionName)"
+           nz-tooltip>
+          <tmc-icon [tmcIconType]="conf.iconName" [tmcIconSize]="conf.iconSize" [color]="conf.iconColor"></tmc-icon>
+        </a>
+      </div>
+    </div>
+    <nz-divider class="divider" *ngIf="selectedCount!=0" nzType="vertical"></nz-divider>
+    <div class="action-item" *ngIf="selectedCount!=0">
+      <a nzTitle="{{ 'label.select.none' | translate }}"
+         nzPlacement="topRight"
+         nz-tooltip
+         nzCancelText="{{ 'cancel' | translate }}"
+         nzOkText="{{ 'label.cancel.select' | translate }}"
+         nz-popconfirm
+         (nzOnConfirm)="event('selectNone')">
+        <tmc-icon [tmcIconType]="'cancel'" [tmcIconSize]="'small'" [color]="'white'"></tmc-icon>
+      </a>
+    </div>
+  </div>
+</div>

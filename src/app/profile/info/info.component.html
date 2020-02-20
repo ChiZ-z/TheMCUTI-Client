@@ -1,0 +1,160 @@
+<div class="info-container">
+    <div class="info-content" *ngIf="user.langs">
+        <div class="label">
+            <div class="label-text">{{ 'title.lang.skills' | translate }}</div>
+            <div class="action" *ngIf="isCurrentUserProfile()">
+                 <button nz-button nzType="primary" 
+                         (click)="showAddLangModal()"
+                         class="primary-button">
+                         {{ 'label.add.user.lang' | translate }}
+                </button>
+            </div>
+        </div>
+        <div *ngFor="let lang of user.langs">
+            <tmc-user-lang-card [userLang]="lang"></tmc-user-lang-card>
+        </div>
+    </div>
+    <div *ngIf="noLangs">
+        <nz-alert nzType="info" nzMessage="{{ (isCurrentUserProfile() ? 'no.langs.in.your.profile' : 'no.langs.in.user.profile') | translate }}"></nz-alert>
+    </div>
+
+    <div class="info-content" *ngIf="user.jobs">
+         <div class="label">
+            <div class="label-text">{{ 'title.job.experience' | translate }}</div>
+            <div class="action" *ngIf="isCurrentUserProfile()">
+                 <button nz-button nzType="primary" 
+                         (click)="showAddExperienceModal()"
+                         class="primary-button">
+                         {{ 'label.add.experience' | translate }}
+                </button>
+            </div>
+        </div>
+        <div *ngFor="let job of user.jobs">
+            <tmc-job-card [jobExperience]="job"></tmc-job-card>
+        </div>
+    </div>
+    <div *ngIf="noJobs">
+        <nz-alert nzType="info" nzMessage="{{ (isCurrentUserProfile() ? 'no.jobs.in.your.profile' : 'no.jobs.in.user.profile') | translate }}"></nz-alert>
+    </div>
+
+    <div class="info-content" *ngIf="user.contacts">
+        <div class="label">
+            <div class="label-text">{{ 'title.additional.contacts' | translate }}</div>
+            <div class="action" *ngIf="isCurrentUserProfile()">
+                 <button nz-button nzType="primary" 
+                         (click)="showAddContactModal()"
+                         class="primary-button">
+                         {{ 'label.add.contact' | translate }}
+                </button>
+            </div>
+        </div>
+        <div *ngFor="let contact of user.contacts">
+            <tmc-contact-card [contact]="contact"></tmc-contact-card>
+        </div>
+    </div>
+    <div *ngIf="noContacts">
+        <nz-alert nzType="info" nzMessage="{{ (isCurrentUserProfile() ? 'no.contacts.in.your.profile' : 'no.contacts.in.user.profile') | translate }}"></nz-alert>
+    </div>
+</div>
+
+<nz-modal [(nzVisible)]="isAddLangModalVisible" 
+          nzOkText="{{ 'add.button' | translate }}"
+          nzTitle="{{ 'label.add.user.lang.title' | translate }}" 
+          nzCancelText="{{ 'cancel' | translate }}"
+          (nzOnCancel)="closeAddLangModal()" 
+          (nzOnOk)="addUserLang()">
+    <form [formGroup]="addLangForm">
+        <nz-form-control>
+            <nz-select name="select-langId"
+            nzShowSearch
+            formControlName="langId"
+            nzPlaceHolder="{{ 'label.choose.lang' | translate }}">
+                <nz-option *ngFor="let lang of langs" nzValue="{{ lang.id }}" nzLabel="{{ lang.langName | translate}}">
+                </nz-option>
+            </nz-select>
+            <nz-form-explain *ngIf="addLangForm.get('langId')?.dirty && addLangForm.get('langId')?.errors">
+                {{ 'label.choose.lang' | translate }}
+            </nz-form-explain>
+        </nz-form-control>
+        <nz-form-control>
+                <nz-select name="select-type"
+                           nzShowSearch
+                           formControlName="level"
+                           nzPlaceHolder="{{ 'label.choose.level.of.lang' | translate }}">
+                           <nz-option nzValue="{{ enum.constants.LOW }}" nzLabel="{{ 'low.level' | translate }}"></nz-option>
+                           <nz-option nzValue="{{ enum.constants.MEDIUM }}" nzLabel="{{ 'medium.level' | translate }}"></nz-option>
+                           <nz-option nzValue="{{ enum.constants.HIGH }}" nzLabel="{{ 'high.level' | translate }}"></nz-option>
+                </nz-select>
+            <nz-form-explain *ngIf="addLangForm.get('level')?.dirty && addLangForm.get('level')?.errors">
+                {{ 'label.choose.level.of.lang' | translate }}
+            </nz-form-explain>
+        </nz-form-control>
+    </form>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="isAddContactModalVisible" 
+          nzOkText="{{ 'add.button' | translate }}"
+          nzTitle="{{ 'label.add.user.contact' | translate }}" 
+          nzCancelText="{{ 'cancel' | translate }}"
+          (nzOnCancel)="closeAddContactModal()" 
+          (nzOnOk)="addUserContact()">
+    <form [formGroup]="addContactForm">
+        <nz-form-control>
+            <nz-select name="select-type"
+            nzShowSearch
+            formControlName="type"
+            nzPlaceHolder="{{ 'label.choose.contact.type' | translate }}">
+                <nz-option nzValue="{{ enum.constants.SKYPE }}" nzLabel="{{ enum.constants.SKYPE }}"></nz-option>
+                <nz-option nzValue="{{ enum.constants.VK }}" nzLabel="{{ enum.constants.VK }}"></nz-option>
+                <nz-option nzValue="{{ enum.constants.TWITTER }}" nzLabel="{{ enum.constants.TWITTER }}"></nz-option>
+                <nz-option nzValue="{{ enum.constants.FACEBOOK }}" nzLabel="{{ enum.constants.FACEBOOK }}"></nz-option>
+                <nz-option nzValue="{{ enum.constants.INSTAGRAM }}" nzLabel="{{ enum.constants.INSTAGRAM }}"></nz-option>
+                <nz-option nzValue="{{ enum.constants.EMAIL }}" nzLabel="{{ enum.constants.EMAIL }}"></nz-option>
+                <nz-option nzValue="{{ enum.constants.PHONE }}" nzLabel="{{ enum.constants.PHONE }}"></nz-option>
+            </nz-select>
+            <nz-form-explain *ngIf="addContactForm.get('type')?.dirty && addContactForm.get('type')?.errors">
+                {{ 'label.choose.lang' | translate }}
+            </nz-form-explain>
+        </nz-form-control>
+        <nz-form-control>
+            <input nz-input placeholder="{{ 'label.enter.value' | translate }}" formControlName="contactValue" />
+            <nz-form-explain *ngIf="addContactForm.get('contactValue')?.dirty && addContactForm.get('contactValue')?.errors">
+                {{ 'error.invalid.value' | translate }}
+            </nz-form-explain>
+        </nz-form-control>
+    </form>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="isAddExperienceModalVisible" 
+          nzOkText="{{ 'add.button' | translate }}"
+          nzTitle="{{ 'label.add.job.experience' | translate }}" 
+          nzCancelText="{{ 'cancel' | translate }}"
+          (nzOnCancel)="closeAddExperienceModal()" 
+          (nzOnOk)="addExperience()">
+    <form [formGroup]="addExperienceForm">
+        <nz-form-control>
+            <input nz-input placeholder="{{ 'company' | translate }}" formControlName="place" />
+            <nz-form-explain *ngIf="addExperienceForm.get('place')?.dirty && addExperienceForm.get('place')?.errors">
+                {{ 'error.invalid.value' | translate }}
+            </nz-form-explain>
+        </nz-form-control>
+        <nz-form-control>
+            <input nz-input placeholder="{{ 'position' | translate }}" formControlName="position" />
+            <nz-form-explain *ngIf="addExperienceForm.get('position')?.dirty && addExperienceForm.get('position')?.errors">
+                {{ 'error.invalid.value' | translate }}
+            </nz-form-explain>
+        </nz-form-control>
+        <nz-form-control>
+            <input nz-input placeholder="{{ 'period' | translate }}" formControlName="period" />
+            <nz-form-explain *ngIf="addExperienceForm.get('period')?.dirty && addExperienceForm.get('period')?.errors">
+                {{ 'error.invalid.value' | translate }}
+            </nz-form-explain>
+        </nz-form-control>
+        <nz-form-control>
+            <textarea autosize class="area" nz-input placeholder="{{ 'activity' | translate }}" formControlName="activity" ></textarea>
+            <nz-form-explain *ngIf="addExperienceForm.get('activity')?.dirty && addExperienceForm.get('activity')?.errors">
+                {{ 'error.invalid.value' | translate }}
+            </nz-form-explain>
+        </nz-form-control>
+    </form>
+</nz-modal>

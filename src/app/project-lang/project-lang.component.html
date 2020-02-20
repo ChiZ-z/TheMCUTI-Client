@@ -1,0 +1,319 @@
+<div class="lang-container">
+  <div class="project-info-bar">
+    <div class="project-info-bar-inner" *ngIf="barInfo">
+      <div class="progress-block">
+        <div class="progress-cell">
+          {{ 'label.progress' | translate }} <nz-divider class="divider" nzType="vertical"></nz-divider>
+          <div class="progress-line">
+            <div class="progress-inner-line">
+              <nz-progress [nzPercent]="getLangProgress()" [nzShowInfo]="false"></nz-progress>
+            </div>
+          </div>
+          <div class="block percents">{{ getLangProgress() }}%</div>
+        </div>
+      </div>
+      <div class="info-block">
+        <div class="project-name-outer">
+          <div class="project-name-inner">
+          <a routerLink="/projects/{{currentProjectId}}/langs" [queryParams]="{page : 1}">
+            <div class="project-name">
+              {{ barInfo.projectName | slice : 0 : 40 }}
+            </div>
+          </a>
+            <div class="block project-name" *ngIf="barInfo.projectName.length>40">...</div>
+            <div class="lang-name"> / {{ barInfo.languageName | translate }} [{{ barInfo.languageDefinition}}]</div>
+          </div>
+        </div>
+        <div class="stats-block-outer">
+          <div class="stats-block-inner">
+            <div class="block info-item">
+              {{ barInfo.termsCount }} {{ getTermsCountTitle() | translate }}
+            </div>
+            <nz-divider class="divider-info" nzType="vertical"></nz-divider>
+            <div class="block info-item">
+              {{ barInfo.translationsCount }} {{ 'label.translations.count' | translate }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="settings-bar-outer">
+    <div class="settings-bar-inner">
+      <div class="settings-contaiter-outer">
+        <div class="settings-contaiter-inner" *ngIf="currentUserRole">
+          <div class="block">
+            <nz-divider class="divider-settings" nzType="vertical"></nz-divider>
+          </div>
+          <div class="block button-content ml-15" (click)="showReferenceModal()">
+            <tmc-icon class="mr-5" [tmcIconType]="'reference'" [tmcIconSize]="'medium'"></tmc-icon>
+            {{ 'label.set.reference.lang' | translate }}
+          </div>
+          <div class="block">
+            <nz-divider class="divider-settings" nzType="vertical"></nz-divider>
+          </div>
+          <div class="block button-content ml-15" (click)="showSettingsModal()" *ngIf="currentUserRole && currentUserRole != enum.constants.TRANSLATOR">
+            <tmc-icon class="mr-5" [tmcIconType]="'settings'"></tmc-icon>
+            {{ 'label.project.settings' | translate }}
+          </div>
+          <div class="block" *ngIf="currentUserRole && currentUserRole != enum.constants.TRANSLATOR">
+            <nz-divider class="divider-settings" nzType="vertical"></nz-divider>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="action-block">
+    <div class="filter-block">
+      <div class="filter-block-inner">
+        <div class="block va-c">
+          <nz-input-group class="search-input" [nzPrefix]="prefixIconSearch" [nzAddOnAfter]="suffixDrop">
+            <input type="text" 
+                  [(ngModel)]="searchValue" 
+                  nz-input 
+                  placeholder="{{'search' | translate}}"
+                  (ngModelChange)="filterTermLangList()"
+                  (keydown.enter)="filterTermLangList()">
+          </nz-input-group>
+          <ng-template #prefixIconSearch>
+            <i nz-icon type="search"></i>
+          </ng-template>
+          <ng-template #suffixDrop>
+            <nz-select class="select-width" nzPlacement="topRight" [nzDropdownMatchSelectWidth]="false" [(ngModel)]="searchParam">
+              <nz-option [nzLabel]="utilService.getTranslation('search.by.term.lang')" [nzValue]="enum.constants.TRANSLATION"></nz-option>
+              <nz-option [nzLabel]="utilService.getTranslation('search.by.term')" [nzValue]="enum.constants.TERMVALUE"></nz-option>
+              <nz-option [nzLabel]="utilService.getTranslation('search.by.modifier')" [nzValue]="enum.constants.MODIFIER"></nz-option>
+              <nz-option [nzLabel]="utilService.getTranslation('search.by.reference')" [nzValue]="enum.constants.REFERENCE"></nz-option>
+            </nz-select>
+          </ng-template>
+        </div>
+        {{ 'order'| translate }}
+        <nz-dropdown class="block mr-20" [nzTrigger]="'click'">
+          <a nz-dropdown class="drop-link">
+            {{ sortViewValue | translate }} <i nz-icon type="down"></i>
+          </a>
+          <ul nz-menu>
+            <li nz-menu-item (click)="setSortValueAndView(enum.constants.CREATIONDATE, 'sort.creation.date')">
+              {{ 'sort.creation.date' | translate }}
+            </li>
+            <li nz-menu-item (click)="setSortValueAndView(enum.constants.MODIFIEDDATE, 'sort.modification.date')">
+              {{ 'sort.modification.date' | translate }}
+            </li>
+            <li nz-menu-item (click)="setSortValueAndView(enum.constants.TERMNAME, 'sort.term.value')">
+              {{ 'sort.term.value' | translate }}
+            </li>
+          </ul>
+        </nz-dropdown>
+        <tmc-icon [tmcIconType]="'filter'" class="mr-5"></tmc-icon>
+        <nz-dropdown class="block" [nzTrigger]="'click'">
+          <a nz-dropdown class="drop-link">
+            {{ filterViewValue | translate }} <i nz-icon type="down"></i>
+          </a>
+          <ul nz-menu *ngIf="barInfo">
+            <li nz-menu-item (click)="setFilterValueAndView(enum.constants.DEFAULT, 'show.all')">
+              {{ 'show.all' | translate }}
+            </li>
+            <li nz-menu-item (click)="setFilterValueAndView(enum.constants.FUZZY, 'show.fuzzy')">
+              {{ 'show.fuzzy' | translate }} ({{ fuzzyCount }})
+            </li>
+            <li nz-menu-item (click)="setFilterValueAndView(enum.constants.NOTFUZZY, 'show.not.fuzzy')">
+              {{ 'show.not.fuzzy' | translate }} ({{ barInfo.termsCount-fuzzyCount }})
+            </li>
+            <li nz-menu-item (click)="setFilterValueAndView(enum.constants.TRANSLATED, 'show.translated')">
+              {{ 'show.translated' | translate }} ({{ barInfo.translationsCount }})
+            </li>
+            <li nz-menu-item (click)="setFilterValueAndView(enum.constants.UNTRANSLATED, 'show.untranslated')">
+              {{ 'show.untranslated' | translate }} ({{ barInfo.termsCount - barInfo.translationsCount }})
+            </li>
+            <li nz-menu-item (click)="setFilterValueAndView(enum.constants.DEFAULTEDIT, 'show.default.changed')">
+              {{ 'show.default.changed' | translate }} ({{ changedCount }})
+            </li>
+            <li nz-menu-item (click)="setFilterValueAndView(enum.constants.AUTOTRANSLATED, 'show.autotranslated')">
+              {{ 'show.autotranslated' | translate }} ({{ autoTranslatedCount }})
+            </li>
+          </ul>
+        </nz-dropdown>
+      </div>
+    </div>
+    <div class="button-block">
+      <div class="button-block-inner" *ngIf="termLangList && !isRequestProcessing">
+        <button nz-button 
+                nzType="primary"
+                (click)="showImportModal()" 
+                class="primary-button">
+          {{ 'label.import.export' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="main-block">
+    <div class="loading-block" *ngIf="isRequestProcessing">
+      <nz-spin nzSimple [nzSize]="'large'"></nz-spin>
+    </div>
+    <div *ngIf="isNothingFound && !isRequestProcessing">
+      <nz-alert nzType="info" nzMessage="{{ 'info.nothing.found' | translate }}"></nz-alert>
+    </div>
+    <div *ngIf="isNoTranslations && !isRequestProcessing">
+      <nz-alert nzType="info" nzMessage="{{ 'info.no.terms' | translate }}"></nz-alert>
+    </div>
+    <div *ngFor="let translation of termLangList">
+      <tmc-translation-card [(translation)]="translation"
+                            [currentLangId]="currentLangId"
+                            [referenceId]="referenceLangId">
+      </tmc-translation-card>
+    </div>
+    <div class="left-block"></div>
+    <div class="pagination-block" *ngIf="!isRequestProcessing && langPageParam && langPageParam.pageCount!=0">
+      <nz-pagination (nzPageIndexChange)="pageIndexChange($event)" 
+        (nzPageSizeChange)="pageSizeChange($event)"
+        [nzSize]="'small'" 
+        [(nzPageIndex)]="currentPage" 
+        [nzTotal]="langPageParam.size"
+        [(nzPageSize)]="currentPageSize" 
+        nzShowSizeChanger>
+      </nz-pagination>
+    </div>
+    <div class="sticky-ex" *ngIf="!isRequestProcessing &&!isNothingFound && !isNoTranslations && langPageParam">
+        <tmc-stick [config]="config"
+                   (action)="chooseAction($event)"
+                   [selectedCount]="countSelectedTranslations()">
+        </tmc-stick>
+    </div>
+  </div>
+</div>
+
+<nz-modal [(nzVisible)]="isReferenceModalVisible" 
+          nzOkText="{{ 'label.save' | translate }}"
+          nzTitle="{{ 'label.set.reference.lang' | translate }}" 
+          nzCancelText="{{ 'cancel' | translate }}"
+          (nzOnCancel)="handleReferenceModalCancel()" 
+          (nzOnOk)="handleReferenceModalOk()">
+          <form [formGroup]="referenceForm">
+            <nz-form-control>
+              <nz-select name="select-langId" 
+                        formControlName="langId" 
+                        nzShowSearch
+                        nzAllowClear
+                        nzPlaceHolder="{{ 'label.choose.lang' | translate }}">
+                <nz-option *ngFor="let lang of allowedReferenceLangs" nzValue="{{ lang.id }}" 
+                            nzLabel="{{ lang.lang.langName | translate}}  ({{ getRefLangProgress(lang) }} %)">
+                </nz-option>
+              </nz-select>
+              <nz-form-explain *ngIf="referenceForm.get('langId')?.dirty && referenceForm.get('langId')?.errors">
+                {{ 'error.incorrect.lang' | translate }}
+              </nz-form-explain>
+            </nz-form-control>
+          </form>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="isSettingsModalVisible" 
+          nzOkText="{{ 'add.button' | translate }}"
+          nzTitle="{{ 'label.project.settings' | translate }}" 
+          nzCancelText="{{ 'cancel' | translate }}"
+          (nzOnCancel)="handleSettingsModalCancel()" 
+          [nzFooter]="settingsModalFooter">
+          <div class="deletion-block db-border">
+              <div class="deletion-description">{{ 'label.flushing.lang' | translate }}</div>
+              <div class="deletion-value">
+                  <button nz-button
+                          nzType="danger"
+                          (click)="showFlushLangModal()"
+                          class="danger-button">
+                      {{ 'label.flush.lang' | translate }}
+                  </button>
+              </div>
+          </div>
+          <div class="deletion-block">
+              <div class="deletion-description">{{ 'label.deleting.language' | translate }}</div>
+              <div class="deletion-value">
+                  <button nz-button
+                          nzType="danger"
+                          (click)="showDeleteLangModal()"
+                          class="danger-button">
+                      {{ 'delete.lang' | translate }}
+                  </button>
+              </div>
+          </div>
+          <ng-template #settingsModalFooter>
+              <button nz-button nzType="primary" (click)="handleSettingsModalCancel()">{{ 'label.close' | translate }}</button>
+          </ng-template>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="isImportModalVisible" 
+          nzWidth="430"
+          [(nzOkLoading)]="isRequestProcessing"
+          nzOkText="{{ (isImportBlock ? 'label.import' : 'label.export') | translate }}"
+          nzCancelText="{{ 'cancel' | translate }}"
+          (nzOnCancel)="handleImportModalCancel()" 
+          (nzOnOk)="isImportBlock ? importTranslations() : exportFile()">
+<div class="main-imports-block">
+  <nz-tabset class="tabs" [nzSelectedIndex]="isImportBlock ? 0 : 1">
+    <nz-tab nzTitle="{{ 'import' | translate }}" (nzClick)="changeShowImportBlock(true)">
+     <div class="label-block">
+      <div>{{ 'choose.file.in.format' | translate }}:</div>
+     <div class="formats">
+       <ul class="pl-30">
+         <li>JSON</li>
+         <li>Properties</li>
+         <li>Strings</li>
+         <li>XML</li>
+         <li>RESX</li>
+       </ul>
+     </div>
+     </div>
+        <label for="image">
+          <input type="file" #fileInput 
+                 name="image" 
+                 id="image" 
+                 (change)="fileEvent(fileInput)"
+                 style="display:none;" 
+                 accept=".properties, .json, .xml, .strings, resx"/>
+        <tmc-icon [tmcIconType]="'file-input'" class="pointer" [tmcIconSize]="'ultra-large'"></tmc-icon>
+      </label>
+    <div *ngIf="fileNameView">{{ fileNameView }}</div>
+    <div class="with-terms">
+      <label nz-checkbox name="checkReplace" class="mr-5" [(ngModel)]="isImportTerms" (ngModelChange)="checkReplace()"></label> {{ 'with.terms' | translate }}
+    </div>
+    <div class="with-terms" *ngIf="isImportTerms">
+      <label nz-checkbox name="checkReplace" class="mr-5" [(ngModel)]="isReplace"></label> {{ 'replace' | translate }}
+    </div>
+    </nz-tab>
+    <nz-tab nzTitle="{{ 'export' | translate }}" (nzClick)="changeShowImportBlock(false)">
+      <div class="export-content">
+          <nz-radio-group [(ngModel)]="exportType">
+              <label nz-radio [ngStyle]="style" class="w-100 mb-5" nzValue="json">JSON</label>
+              <label nz-radio [ngStyle]="style" class="w-100 mb-5" nzValue="properties">PROPERTIES</label>
+              <label nz-radio [ngStyle]="style" class="w-100 mb-5" nzValue="propertiesUnicode">PROPERTIES {{ 'unicode' | translate }}</label>
+              <label nz-radio [ngStyle]="style" class="w-100 mb-5" nzValue="strings">STRINGS</label>
+              <label nz-radio [ngStyle]="style" class="w-100 mb-5" nzValue="stringUnicode">STRINGS {{ 'unicode' | translate }}</label>
+              <label nz-radio [ngStyle]="style" class="w-100 mb-5" nzValue="xml">XML</label>
+              <label nz-radio [ngStyle]="style" class="w-100 mb-5" nzValue="resx">RESX</label>
+          </nz-radio-group>
+      </div>
+    </nz-tab>
+  </nz-tabset>
+</div>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="isDeletingVisible" 
+          nzTitle="{{ 'label.deleting.language' | translate }}"
+          (nzOnCancel)="handleAlertModalsClose(true)" 
+          *ngIf="currentUserRole != enum.constants.TRANSLATOR"
+          [nzFooter]="alertModalFooterDP">
+    <div class="modal-content">{{ 'are.you.sure.deleting.project.lang' | translate }}</div>
+    <ng-template #alertModalFooterDP>
+        <button class="cancel" (click)="handleAlertModalsClose(true)">{{ 'label.close' | translate }}</button>
+        <button nz-button nzType="danger" class="delete-button" (click)="deleteLang()">{{ 'delete.button' | translate }}</button>
+    </ng-template>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="isFlushingVisible" 
+          nzTitle="{{ 'label.flushing.lang' | translate }}"
+          (nzOnCancel)="handleAlertModalsClose(true)" 
+          [nzFooter]="alertModalFooterFA">
+    <div class="modal-content">{{ 'are.you.sure.making.empty' | translate }}</div>
+    <ng-template #alertModalFooterFA>
+        <button class="cancel" (click)="handleAlertModalsClose(true)">{{ 'label.close' | translate }}</button>
+        <button nz-button nzType="danger" class="delete-button" (click)="flushTranslations()">{{ 'flush.button' | translate }}</button>
+    </ng-template>
+</nz-modal>

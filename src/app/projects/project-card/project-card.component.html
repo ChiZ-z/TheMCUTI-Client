@@ -1,0 +1,71 @@
+<div class="card-container"
+    [ngClass]="{'author' : currentUserId == project.author.id, 'shared': currentUserId != project.author.id}">
+    <div class="progress-outer">
+        <div class="progress-inner">
+            <nz-progress [nzPercent]="getProjectProgress()" 
+                         nzType="circle" 
+                         [nzWidth]="42"></nz-progress>
+        </div>
+    </div>
+    <div class="project-info-outer">
+        <div class="project-info-inner">
+            <div class="project-name-block">
+                <div class="project-name-outer">
+                    <div class="project-name-inner"><a class="project-link"
+                            routerLink="/projects/{{project.id}}/langs" [queryParams]="{page : 1}">{{ project.projectName }}</a>
+                    </div>
+                    <div class="shared-label" *ngIf="currentUserId != project.author.id">{{ 'label.shared' | translate }}
+                    </div>
+                </div>
+            </div>
+            <div class="project-stats-block">
+                <div class="stat">{{project.contributors.length}} {{ getContributorsTitle() | translate }}<nz-divider
+                        nzType="vertical"></nz-divider>
+                    {{ project.termsCount }} {{ getTermsCountTitle() | translate }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="langs-block">
+        <div class="langs-inner-block">
+            <div class="langs-list-block">
+                <div *ngIf="defaultLang.lang.langIcon" class="lang-icon block"
+                    routerLink="/projects/{{project.id}}/langs/{{defaultLang.id}}"
+                    nzTitle="{{defaultLang.lang.langName | translate}} ({{'default' | translate}})"
+                    nzPlacement="topRight" 
+                    nz-tooltip>
+                    <tmc-icon [tmcType]="'flag'" 
+                              [tmcIconSize]="'flag-small'" 
+                              [tmcIconType]="defaultLang.lang.langIcon ? defaultLang.lang.langIcon : 'Unknown.png'">
+                    </tmc-icon>                    
+                </div>
+                <nz-divider *ngIf="project.projectLangs.length>0" class="lang-divider block" nzType="vertical">
+                </nz-divider>
+            </div>
+            <div class="langs-list-block" *ngFor="let lang of project.projectLangs; let i=index">
+                <div *ngIf="!lang.default && i<3">
+                    <div *ngIf="lang.lang.langIcon" 
+                        class="lang-item lang-icon"
+                        routerLink="/projects/{{project.id}}/langs/{{lang.id}}"
+                        nzTitle="{{lang.lang.langName | translate}}" 
+                        nzPlacement="topRight" 
+                        nz-tooltip>
+                        <tmc-icon [tmcType]="'flag'" 
+                                  [tmcIconSize]="'flag-small'" 
+                                  [tmcIconType]="lang.lang.langIcon ? lang.lang.langIcon : 'Unknown.png'">
+                        </tmc-icon>  
+                    </div>
+                </div>
+            </div>
+            <div class="langs-list-block" *ngIf="project.projectLangs.length > 3">
+                <div class="additional-langs" 
+                     routerLink="/projects/{{project.id}}/langs"
+                     nzTitle="{{ 'and.more' | translate }} {{ project.projectLangs.length-3 }} {{ 'more' | translate }}"
+                     nzPlacement="topRight"
+                     nz-tooltip>
+                    +{{ project.projectLangs.length-3 }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

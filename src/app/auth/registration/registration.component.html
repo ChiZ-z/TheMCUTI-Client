@@ -1,0 +1,115 @@
+<div class="registration-container">
+    <div class="registration-content">
+        <div class="left">
+            <div class="left-top"></div>
+            <div class="left-medium">
+                <div class="border"></div>
+                <div class="info-block">
+                    <div class="title">TheMCUTI</div>
+                    <div class="info-item">{{ 'simple' | translate }}</div>
+                    <div class="info-item">{{ 'convinient' | translate }}</div>
+                    <div class="info-item">{{ 'stable' | translate }}</div>
+                </div>
+            </div>
+            <div class="left-bottom"></div>
+        </div>
+        <div class="right">
+            <div class="right-top"></div>
+            <div class="right-medium">
+                <div class="form-block">
+                    <div class="form-inner">
+                        <div class="form-title">{{ 'label.create.new.account' | translate }}</div>
+                        <div class="form-info">{{ 'label.enter.to.account' | translate }}
+                            <a routerLink="/login">{{ 'label.exists.account' | translate }}</a>
+                            {{ 'label.if.registred' | translate }}</div>
+                            <form class="form" [formGroup]="registerForm">
+                                <nz-alert *ngIf="isError" nzType="error" class="mb-10" nzMessage="{{ errorText }}"></nz-alert>
+                                <nz-form-control class="mb-10">
+                                    <nz-input-group [nzPrefix]="loginPrefix">
+                                        <input nz-input placeholder="{{ 'form.username' | translate }}" name="username" formControlName="username" />
+                                    </nz-input-group>
+                                    <ng-template #loginPrefix>
+                                        <i nz-icon class="icon" type="user"></i>
+                                    </ng-template>
+                                    <nz-form-explain *ngIf="registerForm.get('username').dirty && registerForm.get('username').errors">
+                                        {{ 'error.invalid.value' | translate }}
+                                    </nz-form-explain>
+                                    <nz-form-explain *ngIf="!registerForm.get('username').errors">
+                                        <div class="{{ usernameFree ? 'free' : 'exists' }}">
+                                            {{ (usernameFree ? 'info.username.free' : 'error.username.exists') | translate }}
+                                        </div>
+                                    </nz-form-explain>
+                                </nz-form-control>
+                                <nz-form-control class="mb-10">
+                                    <nz-input-group [nzPrefix]="emailPrefix">
+                                        <input nz-input placeholder="{{ 'form.email' | translate }}" formControlName="email" />
+                                    </nz-input-group>
+                                    <ng-template #emailPrefix>
+                                        <i nz-icon class="icon" type="mail"></i>
+                                    </ng-template>
+                                    <nz-form-explain *ngIf="registerForm.get('email').dirty && registerForm.get('email').errors">
+                                        {{ 'error.invalid.value' | translate }}
+                                    </nz-form-explain>
+                                    <nz-form-explain *ngIf="!registerForm.get('email').errors">
+                                        <div class="{{ emailFree ? 'free' : 'exists' }}">
+                                            {{ (emailFree ? 'info.email.free' : 'error.email.exists') | translate }}
+                                        </div>
+                                    </nz-form-explain>
+                                </nz-form-control>
+                                <nz-form-control class="mb-10">
+                                    <nz-input-group [nzPrefix]="namePrefix">
+                                        <input nz-input placeholder="{{ 'form.name' | translate }}" formControlName="name" />
+                                    </nz-input-group>
+                                    <ng-template #namePrefix>
+                                        <i nz-icon class="icon" type="user"></i>
+                                    </ng-template>
+                                    <nz-form-explain *ngIf="registerForm.get('name').dirty && registerForm.get('name').errors">
+                                        {{ 'error.invalid.value' | translate }}
+                                    </nz-form-explain>
+                                </nz-form-control>
+                                <nz-form-control class="mb-10">
+                                    <nz-input-group [nzPrefix]="surnamePrefix">
+                                        <input nz-input placeholder="{{ 'form.surname' | translate }}" name="suename" formControlName="surname" />
+                                    </nz-input-group>
+                                    <ng-template #surnamePrefix>
+                                        <i nz-icon class="icon" type="user"></i>
+                                    </ng-template>
+                                    <nz-form-explain *ngIf="registerForm.get('surname').dirty && registerForm.get('surname').errors">
+                                        {{ 'error.invalid.value' | translate }}
+                                    </nz-form-explain>
+                                </nz-form-control>
+                                <nz-form-control class="mb-10">
+                                    <nz-input-group [nzPrefix]="passPrefix">
+                                        <input type="password" nz-input placeholder="{{ 'form.password' | translate }}" formControlName="password" />
+                                    </nz-input-group>
+                                    <ng-template #passPrefix>
+                                        <i nz-icon class="icon" type="lock"></i>
+                                    </ng-template>
+                                    <nz-form-explain *ngIf="registerForm.get('password').dirty && registerForm.get('password').errors">
+                                        {{ 'error.invalid.value' | translate }}
+                                    </nz-form-explain>
+                                </nz-form-control>
+                                <nz-form-control class="mb-10">
+                                    <nz-input-group [nzPrefix]="pereatPrefix">
+                                        <input type="password" nz-input placeholder="{{ 'form.repeat' | translate }}" formControlName="repeat" />
+                                    </nz-input-group>
+                                    <ng-template #pereatPrefix>
+                                        <i nz-icon class="icon" type="lock"></i>
+                                    </ng-template>
+                                    <nz-form-explain *ngIf="registerForm.get('repeat').dirty && registerForm.get('repeat').errors">
+                                        {{ 'error.invalid.value' | translate }}
+                                    </nz-form-explain>
+                                </nz-form-control>
+                                 <button nz-button nzType="primary" 
+                                         (click)="registration()"
+                                         class="primary-button login-button">
+                                         {{ 'register.button' | translate }}
+                                </button>
+                            </form>
+                    </div>
+                </div>
+            </div>
+            <div class="right-bottom"></div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,239 @@
+<div class="profile-container">
+  <div class="profile-info-bar">
+    <div class="profile-info-bar-inner" *ngIf="user">
+      <div class="profile-info-bar-inner-info">
+        <div class="image-block va-t">
+          <div class="image-link" 
+               (mouseenter)="showUploadText()" 
+               (mouseleave)="hideUploadText()" 
+               *ngIf="isCurrentUserProfile()">
+           <div *ngIf="showUpload" class="upload-text">
+             <div class="upload-text-inner">
+              <div><a class="upload-link" (click)="showUploadImageModal()">{{ 'edit.label' | translate }}</a></div>
+              <div *ngIf="user.profilePhoto"><a class="upload-link" (click)="showDropImageModal()">{{ 'delete.button' | translate }}</a></div>
+             </div>
+           </div>
+           <img *ngIf="user.profilePhoto" [src]="user.imageToShow" class="profile-image">
+           <div class="profile-image" *ngIf="!user.profilePhoto">
+              <tmc-icon [tmcIconSize]="'image-prof'" [tmcType]="'image'" [tmcIconType]="'default-user'"></tmc-icon>
+           </div>
+          </div>
+          <img *ngIf="user.profilePhoto && !isCurrentUserProfile()" [src]="user.imageToShow" class="profile-image">
+          <div class="profile-image" *ngIf="!user.profilePhoto && !isCurrentUserProfile()">
+            <tmc-icon [tmcIconSize]="'image-prof'" [tmcType]="'image'" [tmcIconType]="'default-user'"></tmc-icon>
+          </div>
+        </div>
+        <div class="info-block va-t">
+          <div class="name-block">{{ user.firstName }} {{ user.lastName }} 
+            <a nzTitle="{{ 'label.edit' | translate }}"
+               *ngIf="isCurrentUserProfile()"
+               nzPlacement="right"
+               nz-tooltip
+               class="ml-5"
+               (click)="showEditNamesModal()">
+              <tmc-icon [tmcIconType]="'pan-grey'" [tmcIconSize]="'pre-medium'"></tmc-icon>
+            </a>
+          </div>
+          <div class="email">
+            <div class="info-label">{{ 'email' | translate }}:</div>
+            <div class="info-content">{{ user.email }}</div>
+            <a nzTitle="{{ 'label.edit' | translate }}"
+               *ngIf="isCurrentUserProfile()"
+               nzPlacement="right"
+               nz-tooltip
+               class="ml-5"
+               (click)="showEditEmailModal()">
+              <tmc-icon [tmcIconType]="'pan-grey'" [tmcIconSize]="'small'"></tmc-icon>
+            </a>
+          </div>
+          <div class="login">
+            <div class="info-label">{{ 'username' | translate }}:</div>
+            <div class="info-content">{{ user.username }}</div>
+            <a nzTitle="{{ 'label.edit' | translate }}"
+               *ngIf="isCurrentUserProfile()"
+               nzPlacement="right"
+               nz-tooltip
+               class="ml-5"
+               (click)="showEditUsernameModal()">
+              <tmc-icon [tmcIconType]="'pan-grey'" [tmcIconSize]="'small'"></tmc-icon>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="rating-outer-block">
+        <div class="rating-inner-block">
+          <div class="star-block">
+            <div class="block" *ngFor="let star of starArray">
+              <tmc-icon *ngIf="star == 1" [tmcIconType]="'star'" [tmcIconSize]="'ex-large'"></tmc-icon>
+              <tmc-icon *ngIf="star == 0" [tmcIconType]="'star-white'" [tmcIconSize]="'ex-large'"></tmc-icon>
+            </div>
+          </div>
+          <div class="rating-amount-block">
+            <div class="rating-circle">{{ getUserRating() }}</div>
+            <div class="rating-title">{{ 'rating' | translate }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="tab-bar-outer">
+    <div class="tab-bar-inner">
+      <div class="tab-set">
+        <nz-tabset [nzSelectedIndex]="currentTabIndex">
+          <nz-tab nzTitle="{{ 'label.main' | translate }}" (nzClick)="activateRouterLink('/info')">
+          </nz-tab>
+          <nz-tab nzTitle="{{ 'label.stats' | translate }}" (nzClick)="activateRouterLink('/statistics')">
+          </nz-tab>
+          <nz-tab nzTitle="{{ 'label.history' | translate }}" (nzClick)="activateRouterLink('/history')">
+          </nz-tab>
+          <nz-tab nzTitle="{{ 'label.integration' | translate }}" (nzClick)="activateRouterLink('/integration')">
+          </nz-tab>
+        </nz-tabset>
+      </div>
+      <div class="edit-block" *ngIf="isCurrentUserProfile()">
+        <div class="block">
+          <nz-divider class="divider" nzType="vertical"></nz-divider>
+        </div>
+        <div class="button-content" (click)="showChangePasswordModal()">
+          <tmc-icon [tmcIconType]="'lock'" [tmcIconSize]="'pre-medium'"></tmc-icon>  
+          {{ 'change.password' | translate }}
+        </div>
+        <div class="block">
+            <nz-divider class="divider" nzType="vertical"></nz-divider>
+        </div>
+      </div>
+    </div>
+  </div>
+  <router-outlet></router-outlet>
+</div>
+
+<nz-modal [(nzVisible)]="isChangePasswordModalVisible" 
+          nzOkText="{{ 'change.button' | translate }}"
+          nzTitle="{{ 'change.password' | translate }}" 
+          nzCancelText="{{ 'cancel' | translate }}"
+          (nzOnCancel)="closeChangeModal()" 
+          (nzOnOk)="changePassword()">
+  <form [formGroup]="changeForm">
+    <nz-form-control>
+      <input nz-input type="password" placeholder="{{ 'old.password' | translate }}" formControlName="oldPassword" />
+      <nz-form-explain *ngIf="changeForm.get('oldPassword')?.dirty && changeForm.get('oldPassword')?.errors">
+        {{ 'error.invalid.value' | translate }}
+      </nz-form-explain>
+    </nz-form-control>
+    <nz-form-control>
+      <input nz-input type="password" placeholder="{{ 'new.password' | translate }}" formControlName="newPassword" />
+      <nz-form-explain *ngIf="changeForm.get('newPassword')?.dirty && changeForm.get('newPassword')?.errors">
+        {{ 'error.invalid.value' | translate }}
+      </nz-form-explain>
+    </nz-form-control>
+    <nz-form-control>
+      <input nz-input type="password" placeholder="{{ 'password.repeat' | translate }}" formControlName="repeatPassword" />
+      <nz-form-explain *ngIf="changeForm.get('repeatPassword')?.dirty && changeForm.get('repeatPassword')?.errors">
+        {{ 'error.invalid.value' | translate }}
+      </nz-form-explain>
+    </nz-form-control>
+  </form>
+  <nz-alert *ngIf="passwordsNotEquals" nzType="error" nzMessage="{{ 'passwords.arent.equals' | translate }}"></nz-alert>
+  <nz-alert *ngIf="incorrectOldPass" nzType="error" nzMessage="{{ 'incorrect.pass' | translate }}"></nz-alert>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="isEditNamesModalVisible" 
+          nzOkText="{{ 'change.button' | translate }}"
+          nzTitle="{{ 'label.edit.names' | translate }}" 
+          nzCancelText="{{ 'cancel' | translate }}"
+          (nzOnCancel)="closeEditNamesModal()" 
+          (nzOnOk)="editNames()">
+  <form [formGroup]="editNamesForm">
+    <nz-form-control>
+      <input nz-input placeholder="{{ 'first.name' | translate }}" formControlName="name" />
+      <nz-form-explain *ngIf="editNamesForm.get('name')?.dirty && editNamesForm.get('name')?.errors">
+        {{ 'error.invalid.value' | translate }}
+      </nz-form-explain>
+    </nz-form-control>
+    <nz-form-control>
+      <input nz-input placeholder="{{ 'last.name' | translate }}" formControlName="surname" />
+      <nz-form-explain *ngIf="editNamesForm.get('surname')?.dirty && editNamesForm.get('surname')?.errors">
+        {{ 'error.invalid.value' | translate }}
+      </nz-form-explain>
+    </nz-form-control>
+  </form>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="isEditEmailModalVisible" 
+          nzOkText="{{ 'change.button' | translate }}"
+          nzTitle="{{ 'label.edit.email' | translate }}" 
+          nzCancelText="{{ 'cancel' | translate }}"
+          (nzOnCancel)="closeEditEmailModal()" 
+          (nzOnOk)="editEmail()">
+  <form [formGroup]="editEmailForm">
+    <nz-form-control>
+      <input nz-input placeholder="{{ 'first.name' | translate }}" formControlName="email" />
+      <nz-form-explain *ngIf="editEmailForm.get('email')?.dirty && editEmailForm.get('email')?.errors">
+        {{ 'error.invalid.value' | translate }}
+      </nz-form-explain>
+    </nz-form-control>
+    <nz-alert *ngIf="emailExists" nzType="error" nzMessage="{{ 'error.email.exists' | translate }}"></nz-alert>
+    <nz-alert *ngIf="emailFree" nzType="info" nzMessage="{{ 'info.email.free' | translate }}"></nz-alert>
+  </form>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="isEditUsernameModalVisible" 
+          nzOkText="{{ 'change.button' | translate }}"
+          nzTitle="{{ 'label.edit.username' | translate }}" 
+          nzCancelText="{{ 'cancel' | translate }}"
+          (nzOnCancel)="closeEditUsernameModal()" 
+          (nzOnOk)="editUsername()">
+  <form [formGroup]="editUsernameForm">
+    <nz-form-control>
+      <input nz-input placeholder="{{ 'first.name' | translate }}" formControlName="username" />
+      <nz-form-explain *ngIf="editUsernameForm.get('username')?.dirty && editUsernameForm.get('username')?.errors">
+        {{ 'error.invalid.value' | translate }}
+      </nz-form-explain>
+    </nz-form-control>
+    <nz-alert *ngIf="usernameExists" nzType="error" nzMessage="{{ 'error.username.exists' | translate }}"></nz-alert>
+    <nz-alert *ngIf="usernameFree" nzType="info" nzMessage="{{ 'info.username.free' | translate }}"></nz-alert>
+  </form>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="isUploadModalVisible" 
+          nzOkText="{{ 'upload.button' | translate }}"
+          nzTitle="{{ 'label.update.profile.photo' | translate }}" 
+          [(nzOkLoading)]="isUploadProcessing"
+          nzCancelText="{{ 'cancel' | translate }}"
+          (nzOnCancel)="closeUploadImageModal()" 
+          (nzOnOk)="uploadImage()">
+      <div class="upload-block">
+        <div>{{ 'choose.file' | translate }}</div>
+        <label for="image">
+          <input type="file" #fileInput 
+                name="image" 
+                id="image" 
+                (change)="fileChangeEvent($event)"
+                style="display:none;" 
+                accept=".jpeg, .jpg"/>
+          <tmc-icon [tmcIconType]="'file-input'" class="pointer" [tmcIconSize]="'ultra-large'"></tmc-icon>
+        </label>
+      </div>
+      <image-cropper
+        [imageChangedEvent]="imageChangedEvent"
+        [maintainAspectRatio]="true"
+        [aspectRatio]="4 / 4"
+        [resizeToWidth]="128"
+        format="png"
+        (imageCropped)="imageCropped($event)"
+        (imageLoaded)="imageLoaded()"
+        (cropperReady)="cropperReady()"
+        (loadImageFailed)="loadImageFailed()">
+      </image-cropper>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="isDropModalVisible" 
+          nzTitle="{{ 'label.drop.photo' | translate }}"
+          (nzOnCancel)="closeDropModal()" 
+          [nzFooter]="dropFooter">
+    <div class="modal-content">{{ 'alert.drop.photo' | translate }}</div>
+    <ng-template #dropFooter>
+        <button class="cancel" (click)="closeDropModal()">{{ 'cancel' | translate }}</button>
+        <button nz-button nzType="danger" class="delete-button" (click)="dropProfileImage()">{{ 'delete.button' | translate }}</button>
+    </ng-template>
+</nz-modal>

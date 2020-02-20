@@ -1,0 +1,79 @@
+<div class="history-container">
+    <div class="history-container-inner">
+        <div class="filter-block">
+        <div class="filter-label">{{ 'label.filter' | translate }}</div>
+        <nz-dropdown  [nzTrigger]="'click'"[nzPlacement]="'bottomLeft'">
+            <button nz-button nz-dropdown> 
+                <div class="float-r"><i nz-icon type="down"></i></div>
+                <div class="btn-label">{{ periodView | translate }}</div>
+            </button> 
+            <ul nz-menu>
+                <li nz-menu-item (click)="prepareFilters(enum.constants.WEEK, 'seven.days')">{{ 'seven.days' | translate }}</li>
+                <li nz-menu-item (click)="prepareFilters(enum.constants.MONTH, 'last.month')">{{ 'last.month' | translate }}</li>
+                <li nz-menu-item *ngIf="registrationDate" (click)="prepareFilters(enum.constants.ALL, 'full.history')">{{ 'full.history' | translate }}</li>
+                <li nz-menu-item (click)="chooseArbitraryPeriod()">{{ 'label.arbitrary.period' | translate }}</li>
+            </ul>
+        </nz-dropdown>
+        <nz-range-picker class="picker" [nzDisabledDate]="disabledEndDate" [(ngModel)]="dates" (ngModelChange)="dates.length>0 ? getHistory() : ''"></nz-range-picker>
+        <nz-dropdown  [nzTrigger]="'click'"[nzPlacement]="'bottomLeft'">
+            <button nz-button nz-dropdown> 
+                <div class="float-r"><i nz-icon type="down"></i></div>
+                <div class="btn-label">{{ projectView | translate }}</div>
+            </button> 
+            <ul nz-menu *ngIf="projectsList">
+                <li nz-menu-item (click)="setProjectId(-1, null)">{{ 'label.all.projects' | translate }}</li>
+                <li nz-menu-item *ngFor="let project of projectsList" (click)="setProjectId(project.id, project)">
+                    {{ project.projectName }}
+                </li>
+            </ul>
+        </nz-dropdown>
+        <nz-dropdown  [nzTrigger]="'click'"[nzPlacement]="'bottomLeft'">
+            <button nz-button nz-dropdown> 
+                <div class="float-r"><i nz-icon type="down"></i></div>
+                <div class="btn-label">{{ actionsView | translate }}</div>
+            </button> 
+            <div class="actions-drop">
+                <div class="radio-block">
+                    <nz-radio-group [(ngModel)]="disableSelection">
+                        <label nz-radio-button nzValue="disable" (click)="changeActionsList(singleActionList, true)">{{ 'show.all.actions' | translate }}</label>
+                        <label nz-radio-button nzValue="undisable" (click)="changeActionsList(allActionsList, true)">{{ 'show.selected.actions' | translate }}</label>
+                    </nz-radio-group>
+                    <nz-checkbox-wrapper class="w-100 mt-10">
+                    <div nz-row>
+                        <div nz-col nzSpan="12" *ngFor="let action of tempAllActionsList">
+                            <label nz-checkbox (ngModelChange)="changeActionState(action)" [nzDisabled]="disableSelection == 'disable'" 
+                                [ngModel]="checkSelected(action)">
+                                {{ 'action.' + action | translate }}
+                            </label>
+                        </div>
+                    </div>
+                    </nz-checkbox-wrapper>
+                </div>
+            </div>
+        </nz-dropdown>
+        </div>
+        <div class="history-list-block">
+            <div class="border">
+                <nz-alert nzType="info" *ngIf="historyList.length == 0 && !isRequestProcessing" nzMessage="{{ 'label.no.history' | translate }}"></nz-alert>
+                <div class="loading-block" *ngIf="isRequestProcessing">
+                    <nz-spin nzSimple class="loading" [nzSize]="'large'"></nz-spin>
+                </div>
+                <div class="history-content">
+                    <div *ngFor="let history of historyList">
+                        <tmc-user-history-card [(history)]="history"></tmc-user-history-card>
+                    </div>
+                </div>
+            </div>
+             <div class="pagination-block" *ngIf="!isRequestProcessing && pageParams.pageCount!=0">
+                <nz-pagination (nzPageIndexChange)="pageIndexChange($event)" 
+                            (nzPageSizeChange)="pageSizeChange($event)"
+                            [nzSize]="'small'" 
+                            [(nzPageIndex)]="currentPage" 
+                            [nzTotal]="pageParams.size"
+                            [(nzPageSize)]="currentPageSize" 
+                            nzShowSizeChanger>
+                </nz-pagination>
+            </div>
+        </div>
+    </div>
+</div>

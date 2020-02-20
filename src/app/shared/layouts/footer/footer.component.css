@@ -1,0 +1,44 @@
+.footer-container {
+    height: 40px;
+    width: 100gh;
+    min-width: 1200px;
+    background: #EEEEEE;
+}
+
+.footer-content {
+    width: 1200px;
+    margin: 0 auto 0 auto;
+    margin-left: calc((100vw - 1200px)/2);
+    height: 100%;
+}
+
+.lang-block {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    float: right;
+}
+
+.lang-item {
+    display: inline-block;
+    font-family: NotoSans-Regular;
+    font-size: 13px;
+    width: 27px;
+    padding: 3px 0;
+    text-align: center;
+    cursor: pointer;
+}
+
+.active-lang {
+    background-color: #fff;
+    border-radius: 4px;
+    border: 1px solid #979797;
+}
+
+.version-block {
+    display: inline-block;
+    height: 100%;
+    padding: 12px 0;
+    font-family: Montserrat-Medium;
+    font-size: 13px;
+}

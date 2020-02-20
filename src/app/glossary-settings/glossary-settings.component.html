@@ -1,0 +1,24 @@
+<div class="settings-container">
+  <div class="all-settings-label">
+    {{ 'label.settings.for' | translate }} <div class="glossary-name-label" *ngIf="glossary">{{ glossary.glossaryName }}</div>
+  </div>
+  <div class="all-settings-container">
+    <div class="routes-block">
+      <a class="route-link" [ngClass]="{'active': checkUrl('/main')}"
+         routerLink="/glossaries/{{ currentGlossaryId }}/settings/main">
+        <i nz-icon nzType="setting" nzTheme="outline"></i> {{ 'label.main.settings' | translate }}
+      </a>
+      <a class="route-link" [ngClass]="{'active': checkUrl('/moderators')}" 
+         routerLink="/glossaries/{{ currentGlossaryId }}/settings/moderators">
+        <i nz-icon nzType="usergroup-add" nzTheme="outline"></i> {{ 'label.moderators.settings' | translate }}
+      </a>
+      <!-- <a class="route-link" [ngClass]="{'active': checkUrl('/assignment')}" 
+         routerLink="/glossaries/{{ currentGlossaryId }}/settings/assignment">
+        <i nz-icon nzType="link" nzTheme="outline"></i> {{ 'label.assignment.settings' | translate }}
+      </a> -->
+    </div>
+    <div class="outlet">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

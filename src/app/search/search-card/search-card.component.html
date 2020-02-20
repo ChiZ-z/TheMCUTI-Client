@@ -1,0 +1,77 @@
+<div class="search-item-container {{ getBorder() }}">
+    <div class="main-block-outer">
+        <div class="main-block-inner">
+            <div *ngIf="searchItem.category == enum.constants.TERMS">
+                <a class="main-title pointer" routerLink="/projects/{{ searchItem.projectId }}/terms"  [queryParams]="{ 'page' : 1, 'search' : searchValue}">
+                    <span *ngFor="let str of arrayToGlow">
+                        <span class="{{ checkStringToGlow(str) ? 'glow' : '' }}">{{ str }}</span>
+                    </span>
+                    <span class="term-type ml-10">{{ 'Term' | translate }}</span>
+                </a>
+                <div class="main-additional">
+                    {{ 'label.translations.count' | translate }}: {{ searchItem.translatedCount }} / {{ searchItem.translatedAll }}
+                </div>
+            </div>
+            <div *ngIf="searchItem.category == enum.constants.TRANSLATIONS">
+                <a class="main-title pointer"  routerLink="/projects/{{ searchItem.projectId }}/langs/{{ searchItem.projectLangId }}"
+                     [queryParams]="{ 'page' : 1, 'search' : searchValue}">
+                    <span *ngFor="let str of arrayToGlow">
+                        <span class="{{ checkStringToGlow(str) ? 'glow' : '' }}">{{ str }}</span>
+                    </span>
+                    <div class="translation-type ml-10">{{ 'Translation' | translate }}</div>
+                </a>
+                <div class="main-additional">
+                    {{ searchItem.term }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="divider-block" *ngIf="searchItem.category == enum.constants.TRANSLATIONS">
+        <nz-divider class="divider" nzType="vertical"></nz-divider>
+    </div>
+    <div class="lang-icon-outer">
+        <div class="lang-icon-inner">
+            <a *ngIf="searchItem.category == enum.constants.TRANSLATIONS"
+                nzTitle="{{ searchItem.lang | translate}}" 
+                nzPlacement="topRight" 
+                nz-tooltip 
+                routerLink="/projects/{{ searchItem.projectId }}/langs/{{ searchItem.projectLangId }}"
+                [queryParams]="{ 'page' : 1}">
+                <tmc-icon [tmcType]="'flag'" 
+                        class="mr-5"                         
+                        [tmcIconSize]="'flag-small'"
+                        [tmcIconType]="searchItem.langIcon ?searchItem.langIcon : 'Unknown.png'">
+                </tmc-icon>
+            </a>
+        </div>
+    </div>
+    <div class="divider-block">
+        <nz-divider class="divider" nzType="vertical"></nz-divider>
+    </div>
+    <div class="project-block-outer">
+        <div class="project-block-inner">
+            <div class="card-reference" *ngIf="searchItem">
+                <a routerLink="/projects/{{ searchItem.projectId }}" [queryParams]="{ 'page' : 1}">
+                    <div class="project-name pointer"
+                        title="{{ searchItem.projectName.length > 15 ? searchItem.projectName : '' }}">
+                        {{ searchItem.projectName | slice : 0 : 15 }}{{ searchItem.projectName.length > 15 ? '...' : '' }}
+                    </div>
+                </a>
+                <div class="project-title">{{ 'label.project' | translate }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="divider-block">
+        <nz-divider class="divider" nzType="vertical"></nz-divider>
+    </div>
+    <div class="action-item-outer">
+        <div class="action-item-inner">
+            <a nzTitle="{{ getLinkTitle() | translate}}" 
+               nzPlacement="topRight" 
+               nz-tooltip 
+               (click)="goToLink()">
+                <tmc-icon [tmcIconType]="'right-arrow'" [tmcIconSize]="'pre-medium'"></tmc-icon>
+            </a>
+        </div>
+    </div>
+</div>

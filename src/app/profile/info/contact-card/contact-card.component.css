@@ -1,0 +1,97 @@
+.card-container {
+    width: 1200px;
+    min-height: 64px;
+    background: #FFFFFF;
+    border: 1px solid #E9E9E9;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    text-align: left;
+    transition: 0.3s;
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.02);
+    border-left: 4px solid #69AF95;
+    position: relative;
+}
+
+.card-container:hover {
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.type-block-outer {
+    display: inline-block;
+    width: 410px;
+    min-height: 64px;
+    vertical-align: top;
+    padding-left: 20px;
+}
+
+.type-block-inner {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: left;
+    padding: 10px 0;
+    width: 410px;
+    height: 64px;
+}
+.type-content {
+    font-family: Montserrat-Medium;
+    color: #3E3E3E;
+    text-transform: uppercase;
+}
+
+.contact-block-outer {
+    display: inline-block;
+    width: 615px;
+    min-height: 64px;
+    vertical-align: top;
+    padding-left: 20px;
+}
+
+.contact-block-inner {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: left;
+    padding: 10px 0;
+    width: 615px;
+    height: 64px;
+}
+.contact-content {
+    font-family: Montserrat-Medium;
+    color: #3E3E3E;
+}
+
+/* ok */
+
+.divider-block {
+    display: inline-block;
+    width: 10px;
+    position: absolute;
+    height: 100%;
+    padding: 10px 0;
+}
+
+/* ok */
+
+.divider {
+    height: 100%;
+    width: 2px;
+}
+
+.action-item-outer {
+    display: inline-block;
+    width: 70px;
+    min-height: 64px;
+    vertical-align: top;
+    padding-left: 20px;
+}
+
+.action-item-inner {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    width: 70px;
+    height: 64px;
+}
+
+nz-form-control{
+    margin-bottom: 10px;
+}

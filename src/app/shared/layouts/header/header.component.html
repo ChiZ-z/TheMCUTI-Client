@@ -1,0 +1,64 @@
+<div class="header-container">
+  <div class="header-inner-container">
+    <div class="header-right-block">
+      <div *ngIf="isAuthenticated()" class="nav-item">
+        <div class="search-input">
+        <tmc-header-search></tmc-header-search>
+        </div>
+      </div>
+      <nz-dropdown *ngIf="isAuthenticated()" [nzPlacement]="'bottomLeft'" [nzTrigger]="'click'">
+        <div nz-dropdown class="nav-item profile-container">
+          <div class="profile-drop" *ngIf="user">
+            <div class="name" title="{{ getTitle() }}" *ngIf="!isOAuth2">{{ getFullName() }}
+              <img *ngIf="!user.profilePhoto" class="profile-image" src="/assets/images/default-user.png">
+              <img *ngIf="user.profilePhoto" class="profile-image" [src]="headerImage">
+              <i nz-icon nzType="down" nzTheme="outline"></i></div>
+            <div class="name" title="{{ getTitle() }}" *ngIf="isOAuth2">{{ user.username }}
+              <img *ngIf="!user.profilePhoto" class="profile-image" src="/assets/images/default-user.png">
+              <img *ngIf="user.profilePhoto" class="profile-image" [src]="headerImage">
+              <i nz-icon nzType="down" nzTheme="outline"></i></div>
+          </div>
+        </div>
+        <ul nz-menu class="drop-menu">
+          <li nz-menu-item>
+            <a class="drop-link" routerLink="/profile/info">{{ 'label.profile' | translate }}</a>
+          </li>
+          <li nz-menu-item>
+            <a class="drop-link" routerLink="/profile/statistics"> {{ 'label.statistics' | translate }}</a>
+          </li>
+          <li nz-menu-item>
+            <a class="drop-link" routerLink="/profile/history"> {{ 'label.history' | translate }}</a>
+          </li>
+          <hr>
+          <li nz-menu-item>
+            <a class="drop-link" (click)="logout()">{{ 'label.logout' | translate }}</a>
+          </li>
+        </ul>
+      </nz-dropdown>
+      <div class="divider" *ngIf="!isAuthenticated()" ></div>
+      <div *ngIf="!isAuthenticated()" class="nav-item">
+        <div class="auth-links" routerLink="/login">
+          {{ 'label.login' | translate }}
+        </div>
+      </div>
+      <div class="divider" *ngIf="!isAuthenticated()" ></div>
+      <div *ngIf="!isAuthenticated()" class="nav-item">
+        <div class="auth-links" routerLink="/registration">
+          {{ 'label.registration' | translate }}
+        </div>
+      </div>
+      <div class="divider" *ngIf="!isAuthenticated()" ></div>
+    </div>
+    <div class="header-left-block">
+      <div class="nav-item">
+        <div class="label" routerLink="/projects">TheMCUTI</div>
+      </div>
+      <div class="nav-item" *ngIf="isAuthenticated()">
+        <div><a class="link" [ngClass]="{'active': checkURI('/projects')}" routerLink="/projects" [queryParams]="{'page': 1}">{{ 'label.projects' | translate }}</a></div>
+      </div>
+      <div class="nav-item" *ngIf="isAuthenticated()">
+        <div><a class="link" [ngClass]="{'active': checkURI('/glossaries')}" routerLink="/glossaries" [queryParams]="{'page': 1}">{{ 'label.glossaries' | translate }}</a></div>
+      </div>
+    </div>
+  </div>
+</div>

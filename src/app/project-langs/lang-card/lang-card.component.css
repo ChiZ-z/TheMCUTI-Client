@@ -1,0 +1,126 @@
+.card-container {
+    width: 1200px;
+    height: 66px;
+    background: #FFFFFF;
+    border: 1px solid #E9E9E9;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    text-align: left;
+    transition: 0.3s;
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.02);
+    border-left: 4px solid #729EA1;
+}
+
+.card-container:hover {
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.info-block-outer {
+    min-width: 1123px;
+    height: 66px;
+    display: inline-block;
+    outline: none;
+    cursor: pointer;
+}
+
+.action-block-outer {
+    width: 70px;
+    height: 66px;
+    display: inline-block;
+}
+
+.info-block-inner {
+    width: 1123px;
+    height: 66px;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.action-block-inner {
+    width: 70px;
+    height: 66px;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.percents {
+    width: 80px;
+    height: 66px;
+    display: inline-block;
+    padding-left: 10px;
+}
+
+.percents-inner {
+    width: 80px;
+    height: 66px;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.main-info {
+    height: 66px;
+    width: 900px;
+    display: inline-block;
+}
+
+.lang-title-inner {
+    height: 26px;
+    width: 500px;
+    display: table-cell;
+    vertical-align: middle;
+    text-transform: uppercase;
+}
+
+.lang-info-inner {
+    height: 30px;
+    display: table-cell;
+    vertical-align: top;
+    font-family: Roboto-Regular;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    text-transform: lowercase;
+    color: rgba(151, 151, 151, 0.65);
+}
+
+.image-block {
+    display: inline-block;
+}
+
+.name-block {
+    display: inline-block;
+    margin-left: 10px;
+    font-family: Montserrat-Medium;
+    font-style: normal;
+    font-size: 14px;
+    color: #111111;
+    vertical-align: top;
+    padding: 3px 0;
+}
+
+.default-block {
+    display: inline-block;
+    margin-left: 10px;
+    background: #F0F4FF;
+    border: 1px solid #4046E3;
+    color: #364AAF;
+    background: #CBD9FF;
+    padding: 2px 12px 2px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-family: Roboto-Regular;
+    text-transform: lowercase;
+}
+
+.divider {
+    height: 70%;
+    width: 2px;
+    color: #C4C4C4;
+}
+
+.action-item {
+    display: inline-block;
+    margin: 0 5px 0 5px;
+    padding: 6px;
+    border-radius: 5px;
+}

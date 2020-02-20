@@ -1,0 +1,246 @@
+<div class="groups-container">
+  <div class="action-block">
+   <div class="filter-block">
+     <div class="filter-block-inner">
+       <div class="filter-type-block">
+        <div class="filter-type-label">{{ 'label.filter' | translate }}</div>
+        <div>
+            <div class="filter-label">{{ 'order'| translate }}:</div>
+            <nz-dropdown  [nzTrigger]="'click'">
+                <button nz-button nz-dropdown> 
+                    <div class="float-r"><i nz-icon type="down"></i></div>
+                    <div class="btn-label">{{ sortViewValue | translate }}</div>
+                </button> 
+                <ul nz-menu>
+                    <li nz-menu-item (click)="setSortValueAndView(enum.constants.CREATIONDATE, 'sort.creation.date')">
+                      {{ 'sort.creation.date' | translate }}
+                    </li>
+                    <li nz-menu-item (click)="setSortValueAndView(enum.constants.LANGUAGENAME, 'sort.lang.name')">
+                      {{ 'sort.lang.name' | translate }}
+                    </li>
+                    <li nz-menu-item (click)="setSortValueAndView(enum.constants.LANGCOUNT, 'sort.langs.amount')">
+                      {{ 'sort.langs.amount' | translate }}
+                    </li>
+                    <li nz-menu-item (click)="setSortValueAndView(enum.constants.GROUPNAME, 'sort.group.name')">
+                      {{ 'sort.group.name' | translate }}
+                    </li>
+                </ul>
+            </nz-dropdown>
+          </div>
+          <div>
+            <div class="filter-label">{{ 'label.group.default.lang'| translate }}:</div>
+            <nz-dropdown [nzTrigger]="'click'">
+                <button nz-button nz-dropdown> 
+                    <div class="float-r"><i nz-icon type="down"></i></div>
+                    <div class="btn-label">{{ langView | translate | lowercase}} {{ lang ? '['+lang.langDef+']' : '' }}</div>
+                </button>
+                <ul nz-menu>
+                    <li nz-menu-item (click)="setLang(null)">
+                        {{ 'label.any.lang' | translate }}
+                    </li>
+                    <li nz-menu-item *ngFor="let lang of langList" (click)="setLang(lang)">
+                        {{ lang.langName | translate }}
+                    </li>
+                </ul>
+            </nz-dropdown>
+          </div>
+        </div>
+        <div class="filter-type-block">
+            <div class="filter-type-label">{{ 'label.categories' | translate }}</div>
+            <div class="button-inner-container" *ngIf="groupList && currentUserRole==enum.constants.GL_AUTHOR || currentUserRole==enum.constants.GL_MODERATOR">
+             <button class="primary-button add-category-button" 
+                      (click)="showAddCategoryModal()" 
+                      nz-button
+                      nzType="default">
+                      {{ 'label.add.category' | translate }}
+              </button>
+            </div> 
+            <div class="no-categories" *ngIf="isNoCategories">
+              <nz-alert nzType="info" nzMessage="{{ 'info.no.categories' | translate }}"></nz-alert>
+            </div>           
+            <div class="category-item"                  
+                 [ngClass]="{'category-selected' : checkCategory(category.id)}"
+                 *ngFor="let category of categoryList">
+                 <div class="delete-category" 
+                      nzTitle="{{ 'label.delete.category' | translate }}"
+                      nzPlacement="topLeft"
+                      (click)="showDeleteCategoryModal(category)"
+                      nz-tooltip>
+                      <i nz-icon nzType="close-circle" nzTheme="outline"></i>
+                  </div>
+               <div class="category-value" (click)="selectCategory(category)">{{ category.categoryName }}</div>
+            </div>
+        </div>
+       </div>
+     </div>
+    </div>
+    <div class="main-content">
+        <div class="header-block">
+          <nz-input-group class="search-input" [nzPrefix]="prefixIconSearch">
+            <input type="text" [(ngModel)]="searchValue"
+                              nz-input placeholder="{{'search' | translate}}"
+                              (ngModelChange)="filterGlossary()"
+                              (keydown.enter)="filterGlossary()">
+          </nz-input-group>
+          <ng-template #prefixIconSearch>
+              <i nz-icon type="search"></i>
+          </ng-template>
+          <div class="button-inner-container ml-10" *ngIf="groupList && currentUserRole==enum.constants.GL_AUTHOR || currentUserRole==enum.constants.GL_MODERATOR">
+            <button class="primary-button add-group-button" 
+                    (click)="showAddGroupModal()" 
+                    nz-button
+                    nzType="primary">
+                    {{ 'label.add.group' | translate }}
+            </button>
+          </div>
+        </div>        
+        <div class="loading-block" *ngIf="isRequestProcessing">
+        <nz-spin nzSimple [nzSize]="'large'"></nz-spin>
+        </div>
+        <div *ngIf="isNothingFound && !isRequestProcessing">
+        <nz-alert nzType="info" nzMessage="{{ 'info.nothing.found' | translate }}"></nz-alert>
+        </div>
+        <div *ngIf="isNoGroups && !isRequestProcessing">
+        <nz-alert nzType="info" nzMessage="{{ ('info.no.groups' + (currentUserRole == enum.constants.GL_AUTHOR? '' : '.guest')) | translate }}"></nz-alert>
+        </div>
+        <div *ngFor="let group of groupList">
+          <tmc-group-card [(group)]="group" 
+                          [currentUserRole]="currentUserRole" 
+                          [fullLangList]="fullLangList"
+                          [glossaryId]="currentGlossaryId" 
+                          [(fullCategoryList)]="categoryList"
+                          [defaultGlossaryLang]="defaultLang"
+                          [currentPage]="currentPage">
+          </tmc-group-card>
+        </div>
+        <div class="pagination-block" *ngIf="!isRequestProcessing && pageParams && pageParams.pageCount!=0">
+            <nz-pagination (nzPageIndexChange)="pageIndexChange($event)" 
+                        (nzPageSizeChange)="pageSizeChange($event)"
+                        [nzSize]="'small'" 
+                        [(nzPageIndex)]="currentPage" 
+                        [nzTotal]="pageParams.size"
+                        [(nzPageSize)]="currentPageSize" 
+                        nzShowSizeChanger>
+            </nz-pagination>
+        </div>
+    </div>
+</div>
+
+<nz-modal [(nzVisible)]="isAddCategoryModalVisible" 
+          nzOkText="{{ 'add.button' | translate }}"
+          nzTitle="{{ 'label.add.category' | translate }}" 
+          nzCancelText="{{ 'cancel' | translate }}"
+          (nzOnCancel)="closeAddCategoryModal()" 
+          (nzOnOk)="addCategory()">
+<form [formGroup]="addCategoryForm">
+  <nz-form-control>
+    <input nz-input class="form-input" 
+           (keydown.enter)="addCategory()" 
+           name="value" 
+           autocomplete="off"
+           placeholder="{{ 'label.enter.category.name' | translate }}" 
+           formControlName="value" />
+    <nz-form-explain *ngIf="addCategoryForm.get('value')?.dirty && addCategoryForm.get('value')?.errors">
+      {{ 'error.incorrect.category.name' | translate }}
+    </nz-form-explain>
+  </nz-form-control>
+</form>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="isDeleteCategoryModalVisible" 
+          nzTitle="{{ 'label.delete.category' | translate }}"
+          (nzOnCancel)="closeDeleteCategoryModal()" 
+          [nzFooter]="alertModalFooterFA">
+    <div class="modal-content">{{ 'label.are.you.sure.delete.category' | translate }}</div>
+    <ng-template #alertModalFooterFA>
+        <button class="cancel" (click)="closeDeleteCategoryModal()">{{ 'label.close' | translate }}</button>
+        <button nz-button nzType="danger" class="delete-button delete-btn" (click)="deleteCategory()">{{ 'delete.button' | translate }}</button>
+    </ng-template>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="isAddGroupModalVisible" 
+          nzTitle="{{ 'label.add.group' | translate }}"
+          nzWidth="720"
+          nzCancelText="{{ 'cancel' | translate }}"
+          nzOkText="{{ 'add.button' | translate }}"
+          (nzOnCancel)="closeAddGroupModal()" 
+          (nzOnOk)="createGroup()">
+          <div class="translation-label fs-16">{{ 'label.group.description' | translate }}:</div>
+          <nz-form-control>
+            <textarea class="area" type="text" name="description" [(ngModel)]="groupForAdding.comment" autosize
+                  nz-input placeholder="{{ 'label.enter.group.description' | translate}}">
+            </textarea>
+          </nz-form-control>
+          <div class="translation-label mt-10">{{ 'label.categories' | translate }}:</div>
+          <input class="mb-10 form-input"
+                 placeholder="{{ 'label.enter.category.name' | translate }}"
+                 nz-input
+                 (keydown.enter)="enterCategoryEvent()"
+                 [(ngModel)]="categoryInputValue"
+                 (ngModelChange)="onCategoryInput($event)"
+                 [nzAutocomplete]="auto"/>
+          <nz-autocomplete #auto>
+            <nz-auto-option *ngFor="let option of categoryOptions" (click)="chooseCategory(option)" [nzValue]="''">
+              {{ option.categoryName }}
+            </nz-auto-option>
+          </nz-autocomplete>
+          <div class="categories-selected-block">
+            <div *ngFor="let category of groupForAdding.categories" class="selected-category">
+              {{ category.categoryName | slice : 0 : 20 }}{{ category.categoryName.length > 20 ? '...' : '' }}
+              <a (click)="deleteCategoryFromGroup(category)" class="green"> <i nz-icon nzType="close-circle" nzTheme="outline"></i></a>
+            </div>
+          </div>   
+          <div class="translation-label mt-10 fs-16">
+              <div class="label-value">{{ 'label.translation.values' | translate }}:</div>                            
+              <button class="primary-button add-translation-button" 
+                      (click)="addTranslationItem()" 
+                      *ngIf="groupForAdding.translationItems.length < 34"
+                      nz-button
+                      nzType="default">
+                      <i nz-icon nzType="plus-circle" nzTheme="outline"></i>
+                      {{ 'label.add.translation' | translate }}
+              </button>
+          </div>
+          <div *ngFor="let item of groupForAdding.translationItems; let i = index">
+            <form [formGroup]="item.addForm" *ngIf="item.addForm" class="item-form" [ngClass]="{'default': item.isLangPermanent}">    
+              <div class="item-value">
+              <nz-form-control>
+                <textarea nz-input class="form-area"
+                        name="translationValue" 
+                        autocomplete="off"
+                        autosize
+                        placeholder="{{ 'label.translation.value' | translate }}" 
+                        formControlName="translationValue" >
+                </textarea>
+                  <nz-form-explain *ngIf="item.addForm.get('translationValue')?.dirty && item.addForm.get('translationValue')?.errors">
+                    {{ 'error.incorrent.translation.item.value' | translate }}
+                  </nz-form-explain>
+                </nz-form-control>
+              </div>
+              <div class="item-lang" *ngIf="!item.isLangPermanent">
+                <nz-form-control>
+                  <nz-select name="select-langId" 
+                            formControlName="langId" 
+                            nzShowSearch
+                            nzAllowClear
+                            nzPlaceHolder="{{ 'label.choose.lang' | translate }}">
+                    <nz-option *ngFor="let lang of langList" nzValue="{{ lang.id }}" nzLabel="{{ lang.langName | translate}}">
+                    </nz-option>
+                  </nz-select>
+                  <nz-form-explain *ngIf="item.addForm.get('langId')?.dirty && item.addForm.get('langId')?.errors">
+                    {{ 'error.incorrect.lang' | translate }}
+                  </nz-form-explain>
+                </nz-form-control>
+              </div>
+              <div class="def-lang" *ngIf="item.isLangPermanent && item.lang">
+                <tmc-icon [tmcType]="'flag'" 
+                          class="mr-10"
+                          [tmcIconSize]="'flag-small'" 
+                          [tmcIconType]="item.lang.langIcon ? item.lang.langIcon : 'Unknown.png'">
+                </tmc-icon> 
+                {{ item.lang.langName | translate }}
+              </div>
+              <div class="delete-item" (click)="deleteTranslationItem(item)" *ngIf="i > 1">{{ 'delete.button' | translate }}</div>
+            </form>
+          </div>        
+</nz-modal>

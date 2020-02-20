@@ -1,0 +1,84 @@
+<div class="block w-100">
+<div class="project-langs-container">
+  <div class="action-block">
+    <div class="filter-block">
+      <div class="filter-block-inner">
+        <nz-input-group class="search-input" [nzPrefix]="prefixIconSearch">
+          <input type="text" [(ngModel)]="searchValue"
+                             nz-input placeholder="{{'search' | translate}}"
+                             (ngModelChange)="filterLangList()"
+                             (keydown.enter)="filterLangList()">
+        </nz-input-group>
+        <ng-template #prefixIconSearch>
+          <i nz-icon type="search"></i>
+        </ng-template>
+        {{ 'order'| translate }}
+        <nz-dropdown class="block" [nzTrigger]="'click'">
+          <a nz-dropdown class="drop-link">
+            {{ sortViewValue | translate }} <i nz-icon type="down"></i>
+          </a>
+          <ul nz-menu>
+            <li nz-menu-item (click)="setSortValueAndView(enum.constants.LANGUAGENAME, 'sort.lang.name')">
+              {{ 'sort.lang.name' | translate }}
+            </li>
+            <li nz-menu-item (click)="setSortValueAndView(enum.constants.PROGRESS, 'sort.progress')">
+              {{ 'sort.progress' | translate }}
+            </li>
+          </ul>
+        </nz-dropdown>
+      </div>
+    </div>
+    <div class="add-lang-block" *ngIf="currentUserRole && currentUserRole!=enum.constants.TRANSLATOR">
+      <div class="add-lang-block-inner">
+        <button nz-button nzType="primary" class="primary-button" (click)="showAddProjectLangModal()">{{ 'label.add.lang' | translate }}</button>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="isNothingFound && !isRequestProcessing">
+    <nz-alert nzType="info" nzMessage="{{ 'info.nothing.found' | translate }}"></nz-alert>
+  </div>
+  <div class="loading-block" *ngIf="isRequestProcessing">
+    <nz-spin nzSimple [nzSize]="'large'"></nz-spin>
+  </div>
+  <div class="langs-content" *ngIf="projectLangList">
+    <div *ngFor="let lang of projectLangList">
+      <tmc-lang-card [lang]="lang" [role]="currentUserRole" [projectId]="currentProjectId"></tmc-lang-card>
+    </div>
+  </div>
+  <div class="pagination-block" *ngIf="!isRequestProcessing && langPageParams && langPageParams.pageCount !=0">
+    <nz-pagination (nzPageIndexChange)="pageIndexChange($event)" 
+                   (nzPageSizeChange)="pageSizeChange($event)"
+                   [nzSize]="'small'" 
+                   [(nzPageIndex)]="currentPage" 
+                   [nzTotal]="langPageParams.size"
+                   [(nzPageSize)]="currentPageSize" 
+                   nzShowSizeChanger>
+    </nz-pagination>
+  </div>
+</div>
+</div>
+
+<nz-modal [(nzVisible)]="isAddProjectLangVisible" 
+          nzOkText="{{ 'add.button' | translate }}"
+          nzTitle="{{ 'label.add.lang' | translate }}" 
+          nzCancelText="{{ 'cancel' | translate }}"
+          (nzOnCancel)="handleAddProjectLangModalCancel()" 
+          (nzOnOk)="handleAddProjectLangModalOk()">
+<form [formGroup]="addProjectLangForm">
+  <nz-form-control>
+    <nz-select name="select-langId" 
+               formControlName="langId" 
+               nzShowSearch
+               nzAllowClear
+               nzPlaceHolder="{{ 'label.choose.new.lang' | translate }}">
+      <nz-option *ngFor="let lang of langList" 
+                  nzValue="{{ lang.id }}" 
+                  nzLabel="{{ lang.langName | translate}}">
+      </nz-option>
+    </nz-select>
+    <nz-form-explain *ngIf="addProjectLangForm.get('langId')?.dirty && addProjectLangForm.get('langId')?.errors">
+      {{ 'error.incorrect.lang' | translate }}
+    </nz-form-explain>
+  </nz-form-control>
+</form>
+</nz-modal>

@@ -1,0 +1,168 @@
+.card-container {
+    width: 1200px;
+    display: flex;
+    background: #FFFFFF;
+    border: 1px solid #E9E9E9;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    text-align: left;
+    transition: 0.3s;
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.02);
+}
+
+.card-container:hover {
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.author {
+    border-left: 4px solid #ADD3F7;
+}
+
+.shared {
+    border-left: 4px solid #D3ADF7;
+}
+
+.progress-outer {
+    display: inline-block;
+    width: 50px;
+    height: 64px;
+    margin-left: 10px;
+}
+
+.progress-inner {
+    height: 64px;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+::ng-deep .ant-progress-text {
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.project-info-outer {
+    display: inline-block;
+    width: 800px;
+    min-height: 64px;
+    margin-left: 10px;
+}
+
+.project-info-inner {
+    height: 64px;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.project-name-block {
+    font-family: Montserrat-Medium;
+    font-style: normal;
+    font-size: 14px;
+    color: black;
+}
+
+.project-stats-block {
+    font-family: Roboto-Regular;
+    font-style: normal;
+    font-weight: normal;
+    width: 300px;
+    font-size: 14px;
+    line-height: 22px;
+    color: rgba(151, 151, 151, 0.65);
+    text-transform: lowercase;
+    padding-bottom: 4px;
+}
+
+.langs-block {
+    width: 300px;
+    display: inline-block;
+    height: 64px;
+}
+
+.langs-inner-block {
+    height: 64px;
+    width: 300px;
+    display: flex;
+    align-items: center;
+    align-content: right;
+    align-self: right;
+    justify-content: flex-end;
+}
+
+.langs-list-block {
+    display: inline-block;
+}
+
+.lang-item {
+    margin-left: 15px;
+}
+
+.lang-divider {
+    width: 1.5px;
+    background-color: #C4C4C4;
+    height: 41px;
+    margin: 0 0px 0 15px;
+}
+
+.additional-langs {
+    border: 2px solid #2C8665;
+    border-radius: 4px;
+    padding: 0px 7px 0px 7px;
+    cursor: pointer;
+    margin-left: 15px;
+    font-family: Roboto-Regular;
+    font-style: normal;
+    font-weight: bold;
+    outline: none;
+    line-height: 1.6;
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.lang-icon {
+    cursor: pointer;
+    outline: none;
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.05)
+}
+
+.shared-label {
+    display: inline-block;
+    margin-left: 10px;
+    height: 22px;
+    min-width: 50px;
+    font-size: 12px;
+    font-family: Roboto-Regular;
+    border-radius: 4px;
+    padding: 1px 10px 0px 10px;
+    background: #F9F0FF;
+    border: 1px solid #D3ADF7;
+    border-radius: 4px;
+    color: #722ED1;
+    text-transform: lowercase;
+    vertical-align: middle;
+}
+
+.project-name-inner {
+    min-height: 25px;
+    display: inline-block;
+    white-space: -moz-pre-wrap;
+    white-space: -o-pre-wrap;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    line-height: 20px;
+    padding: 10px 0 0 0;
+    max-width: 800px;
+}
+
+.project-name-outer {
+    height: 25px;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.project-link {
+    color: black;
+    transition: 0.3s;
+}
+
+.project-link:hover {
+    color: rgb(116, 113, 113);
+}

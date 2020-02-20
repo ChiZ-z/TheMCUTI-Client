@@ -1,0 +1,65 @@
+<div class="glossary-container">
+  <div class="glossary-info-bar">
+      <div class="glossary-info-bar-inner" *ngIf="glossaryInfo">
+          <div class="info-block">
+              <div class="glossary-name-outer">
+                  <div class="glossary-name-inner" >
+                      <a class="name" routerLink="/glossaries" [queryParams]="{'page' : 1, 'type' : 'my'}">{{ 'label.glossaries' | translate | uppercase}}</a> / {{ glossaryInfo.glossaryName }}
+                      <div class="closed block" *ngIf="glossaryInfo.glossaryType == enum.constants.PRIVATE"> 
+                        <i nz-icon nzType="lock" nzTheme="outline"></i>
+                      </div>
+                  </div>
+              </div>
+              <div class="stats-block-outer">
+                  <div class="stats-block-inner">
+                      <div class="block info-item">{{ glossaryInfo.groupItemCount }} {{ getCountTitle('group', glossaryInfo.groupItemCount) | translate }}
+                      </div>
+                      <nz-divider class="divider-info" nzType="vertical"></nz-divider>
+                      <div class="block info-item">{{ glossaryInfo.wordsCount }} {{ getCountTitle('word', glossaryInfo.wordsCount) | translate }}</div>
+                      <nz-divider class="divider-info" nzType="vertical"></nz-divider>
+                      <div class="block info-item">{{ glossaryInfo.categoriesCount }} {{ getCountTitle('category', glossaryInfo.categoriesCount) | translate }}</div>
+                      <nz-divider class="divider-info" nzType="vertical"></nz-divider>
+                      <div class="block info-item">{{ glossaryInfo.followersCount }} {{ getCountTitle('follower', glossaryInfo.followersCount) | translate }}</div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  <div class="tab-bar-outer">
+    <div class="tab-bar-inner">
+        <div class="tab-set">
+            <nz-tabset [nzSelectedIndex]="currentTabIndex">
+                <nz-tab nzTitle="{{ 'label.groups' | translate }}" (nzClick)="activateRouterLink('groups', true)">
+                </nz-tab>
+                <nz-tab *ngIf="currentUserRole == enum.constants.GL_AUTHOR || currentUserRole == enum.constants.GL_MODERATOR" 
+                        nzTitle="{{ 'label.followers' | translate }}" (nzClick)="activateRouterLink('followers', true)">
+                </nz-tab>
+                <nz-tab *ngIf="currentUserRole == enum.constants.GL_AUTHOR || currentUserRole == enum.constants.GL_MODERATOR" 
+                        nzTitle="{{ 'label.settings' | translate }}" (nzClick)="activateRouterLink('settings', false)">
+                </nz-tab>
+            </nz-tabset>
+        </div>
+        <div class="subscribe-block" *ngIf="glossaryInfo">
+            <button nz-button nzType="primary"
+                  *ngIf="currentUserRole != enum.constants.GL_AUTHOR"
+                  (click)="currentUserRole == enum.constants.GL_FOLLOWER || currentUserRole == enum.constants.GL_MODERATOR ? showUnsubscribeModal() : subscribe()"
+                  class="primary-button subscription"
+                  [ngClass]="{'follow': currentUserRole == enum.constants.GL_FOLLOWER || currentUserRole == enum.constants.GL_MODERATOR}">
+                  {{ (currentUserRole == enum.constants.GL_FOLLOWER || currentUserRole == enum.constants.GL_MODERATOR ? 'label.remove' : 'label.add') | translate }}
+            </button>
+        </div>
+    </div>
+ </div>
+    <router-outlet *ngIf="loadChildRoutes"></router-outlet>
+</div>
+
+<nz-modal [(nzVisible)]="isUnsubscribeModalVisible" 
+          nzTitle="{{ 'label.delete.glossary' | translate }}"
+          (nzOnCancel)="closeUnsubscribeModal()"
+          [nzFooter]="alertModalFooterDG">
+    <div class="modal-content">{{ 'label.are.you.sure.delete.glossary' | translate }}</div>
+    <ng-template #alertModalFooterDG>
+        <button class="cancel" (click)="closeUnsubscribeModal()">{{ 'label.close' | translate }}</button>
+        <button nz-button nzType="danger" class="delete-button" (click)="unsubscribeAction()">{{ 'delete.button' | translate }}</button>
+    </ng-template>
+</nz-modal>

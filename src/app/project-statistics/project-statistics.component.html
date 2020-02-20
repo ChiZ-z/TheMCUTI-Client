@@ -1,0 +1,86 @@
+<div class="statistic-container">
+    <div class="stats-container" *ngIf="projectStats">
+      <div class="stat-block-outer">
+        <div class="stat-block">
+            {{projectStats.translateCount}}
+        </div>
+        <div class="stat-title">{{ 'translated' | translate }}</div>
+      </div>
+      <div class="stat-block-outer">
+        <div class="stat-block">
+            {{projectStats.autoTranslateCount}}
+        </div>
+        <div class="stat-title">{{ 'auto.translated' | translate }}</div>
+      </div>
+      <div class="stat-block-outer">
+        <div class="stat-block">
+            {{projectStats.editCount}}
+        </div>
+        <div class="stat-title">{{ 'edited' | translate }}</div>
+      </div>
+      <div class="stat-block-outer">
+        <div class="stat-block">
+            {{projectStats.translateByImportCount}}
+        </div>
+        <div class="stat-title">{{ 'translated.by.import' | translate }}</div>
+      </div>
+      <div class="stat-block-outer">
+        <div class="stat-block">
+            {{projectStats.editByImportCount}}
+        </div>
+        <div class="stat-title">{{ 'edited.by.import' | translate }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="chart-container">
+      <div class="settings-container-outer">
+        <div class="settings-container-inner">
+          <nz-dropdown [nzTrigger]="'click'" [nzPlacement]="'bottomLeft'">
+            <button nz-button nz-dropdown> 
+              <div class="float-r"><i nz-icon type="down"></i></div>
+              <div class="btn-label-small">{{ showView | translate }}</div>
+            </button> 
+            <ul nz-menu>
+              <li nz-menu-item (click)="chooseView(enum.constants.SUMMARY, 'summary.stats')">{{ 'summary.stats' | translate }}</li>
+              <li nz-menu-item (click)="chooseView(enum.constants.EDIT, 'edited')">{{ 'edited' | translate }}</li>
+              <li nz-menu-item (click)="chooseView(enum.constants.TRANSLATE, 'translated')">{{ 'translated' | translate }}</li>
+              <li nz-menu-item (click)="chooseView(enum.constants.AUTO_TRANSLATE, 'auto.translated')">{{ 'auto.translated' | translate }}</li>
+              <li nz-menu-item (click)="chooseView(enum.constants.EDIT_BY_IMPORT, 'edited.by.import')">{{ 'edited.by.import' | translate }}</li>
+              <li nz-menu-item (click)="chooseView(enum.constants.TRANSLATE_BY_IMPORT, 'translated.by.import')">{{ 'translated.by.import' | translate }}</li>
+              <li nz-menu-item (click)="chooseView(enum.constants.ALL, 'all.stats')">{{ 'all.stats' | translate }}</li>
+            </ul>
+          </nz-dropdown>
+          <div class="btn-block">
+          <nz-dropdown class="ml-10"  [nzTrigger]="'click'"[nzPlacement]="'bottomLeft'">
+            <button nz-button nz-dropdown> 
+                <div class="float-r"><i nz-icon type="down"></i></div>
+                <div class="btn-label">{{ userView | translate }}</div>
+            </button> 
+            <ul nz-menu *ngIf="contributorsList">
+                <li nz-menu-item (click)="setUserId(-1, null)">{{ 'label.all.users' | translate }}</li>
+                <li nz-menu-item *ngFor="let contr of contributorsList" (click)="setUserId(contr.id, contr)">
+                    {{ contr.firstName }} {{ contr.lastName }} ({{ contr.username }}) {{ getAuthorIndification(contr.id) }}
+                </li>
+            </ul>
+        </nz-dropdown>
+        </div>
+          <nz-dropdown class="ml-10" [nzTrigger]="'click'" [nzPlacement]="'bottomLeft'">
+            <button nz-button nz-dropdown> 
+              <div class="float-r"><i nz-icon type="down"></i></div>
+              <div class="btn-label-date">{{ periodView | translate }}</div>
+            </button> 
+            <ul nz-menu>
+              <li nz-menu-item (click)="prepareFilters(enum.constants.WEEK, 'seven.days')">{{ 'seven.days' | translate }}</li>
+              <li nz-menu-item (click)="prepareFilters(enum.constants.MONTH, 'last.month')">{{ 'last.month' | translate }}</li>
+              <li nz-menu-item *ngIf="creationDate" (click)="prepareFilters(enum.constants.FULL_STATS, 'full.stats')">{{ 'full.stats' | translate }}</li>
+              <!-- <li nz-menu-item (click)="getStatsByYear()">{{ 'last.year' | translate }}</li> -->
+              <li nz-menu-item (click)="chooseArbitraryPeriod()">{{ 'label.arbitrary.period' | translate }}</li>
+            </ul>
+          </nz-dropdown>
+          <nz-range-picker class="ml-10" [nzDisabledDate]="disabledEndDate" [(ngModel)]="date" (ngModelChange)="date.length > 0 ? handMadePeriod() : ''"></nz-range-picker>
+        </div>
+      </div>
+        <div class="charts-container" *ngIf="chart">
+            <div id="largeincomingOrders" [chart]="chart" class="chart-item"></div>
+        </div>
+    </div>

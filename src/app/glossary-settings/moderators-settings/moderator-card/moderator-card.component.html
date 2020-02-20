@@ -1,0 +1,22 @@
+<div class="card-container" [ngClass]="{'author': role == enum.constants.GL_AUTHOR}">
+  <div class="image-block">
+    <a routerLink="/profile/{{ moderator.username }}">
+      <img *ngIf="moderator.profilePhoto" [src]="moderator.imageToShow"
+        class="profile-image">
+      <div class="profile-image" *ngIf="!moderator.profilePhoto">
+        <tmc-icon [tmcIconSize]="'image-ex-large'" [tmcType]="'image'" [tmcIconType]="'default-user'"></tmc-icon>
+      </div>
+    </a>
+  </div>
+  <div class="info-block">
+    <div class="name-block">
+      <a class="router-link" routerLink="/profile/{{ moderator.username }}">
+        {{ moderator.firstName }} {{ moderator.lastName }}
+      </a>
+    </div>
+    <div class="info">
+      {{ moderator.username }} | <div class="block" [ngClass]="{'author-label' : role == enum.constants.GL_AUTHOR}">
+          {{ 'label.role.glossary.' + role | lowercase | translate }}
+    </div>
+  </div>
+</div>

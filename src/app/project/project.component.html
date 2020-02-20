@@ -1,0 +1,213 @@
+<div class="project-container">
+    <div class="project-info-bar">
+        <div class="project-info-bar-inner" *ngIf="barInfo">
+            <div class="progress-block">
+                <div class="progress-cell">
+                    {{ 'label.progress' | translate }} <nz-divider class="divider" nzType="vertical"></nz-divider>
+                    <div class="progress-line">
+                        <div class="progress-inner-line">
+                            <nz-progress [nzPercent]="getCurrentProjectProgress()" [nzShowInfo]="false"></nz-progress>
+                        </div>
+                    </div>
+                    <div class="block percents">{{ getCurrentProjectProgress() }}%</div>
+                </div>
+            </div>
+            <div class="info-block">
+                <div class="project-name-outer">
+                    <div class="project-name-inner" title="{{ barInfo.projectName.length>40 ? barInfo.projectName : '' }}">
+                        {{ barInfo.projectName | slice : 0 : 40}}<div class="block" *ngIf="barInfo.projectName.length > 40">...</div>
+                    </div>
+                </div>
+                <div class="stats-block-outer">
+                    <div class="stats-block-inner">
+                        <div class="block info-item">{{ barInfo.termsCount }} {{ getTermsCountTitle() | translate }}
+                        </div>
+                        <nz-divider class="divider-info" nzType="vertical"></nz-divider>
+                        <div class="block info-item">{{ barInfo.translationsCount }}
+                            {{ 'label.translations.count' | translate }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tab-bar-outer">
+        <div class="tab-bar-inner">
+            <div class="settings-contaiter-outer">
+                <div class="settings-contaiter-inner" *ngIf="currentUserRole">
+                    <!-- <div class="block">
+                        <nz-divider class="divider-settings" nzType="vertical"></nz-divider>
+                    </div>
+                    <div class="block button-content ml-15" (click)="showStatsModal()">
+                        <tmc-icon class="mr-5" [tmcIconType]="'statistics'"></tmc-icon>
+                        {{ 'label.my.stats.in.projects' | translate }}
+                    </div> -->
+                    <div class="block" *ngIf="currentUserRole && currentUserRole !=  enum.constants.TRANSLATOR">
+                        <nz-divider class="divider-settings" nzType="vertical"></nz-divider>
+                    </div>
+                    <div class="block button-content ml-15" 
+                            (click)="showSettingsModal()"
+                            *ngIf="currentUserRole && currentUserRole !=  enum.constants.TRANSLATOR">
+                        <tmc-icon class="mr-5" [tmcIconType]="'settings'"></tmc-icon>
+                        {{ 'label.project.settings' | translate }}
+                    </div>
+                    <div class="block" *ngIf="currentUserRole && currentUserRole !=  enum.constants.TRANSLATOR">
+                        <nz-divider class="divider-settings" nzType="vertical"></nz-divider>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-set">
+                <nz-tabset [nzSelectedIndex]="currentTabIndex">
+                    <nz-tab nzTitle="{{ 'label.langs' | translate }}" (nzClick)="activateRouterLink('langs', true)">
+                    </nz-tab>
+                    <nz-tab nzTitle="{{ 'label.terms' | translate }}" (nzClick)="activateRouterLink('terms', true)">
+                    </nz-tab>
+                    <nz-tab nzTitle="{{ 'label.contributors' | translate }}"
+                        (nzClick)="activateRouterLink('contributors', true)">
+                    </nz-tab>
+                    <nz-tab nzTitle="{{ 'label.statistics' | translate }}"
+                        (nzClick)="activateRouterLink('statistics', false)">
+                    </nz-tab>
+                    <nz-tab nzTitle="{{ 'label.history' | translate }}"
+                        (nzClick)="activateRouterLink('history')">
+                    </nz-tab>
+                </nz-tabset>
+            </div>
+        </div>
+    </div>
+    <router-outlet></router-outlet>
+</div>
+<nz-modal [(nzVisible)]="isSettingsModalVisible"
+          nzTitle="{{ 'label.project.settings' | translate }}"
+          (nzOnCancel)="handleSettingsModalClose()" 
+          nzWidth="720"
+          [nzFooter]="settingsModalFooter">
+    <div class="settings-block" *ngIf="currentUserRole !=  enum.constants.TRANSLATOR">
+        <div *ngIf="showSucceedUpdate"><nz-alert nzType="success" nzMessage="{{ 'label.saved' | translate }}"></nz-alert></div>
+        <div *ngIf="showNameExist"><nz-alert nzType="error" nzMessage="{{ 'project.name.exists' | translate }}"></nz-alert></div>
+        <div *ngIf="incorrectProjectName"><nz-alert nzType="error" nzMessage="{{ 'error.incorrect.project.name' | translate }}"></nz-alert></div>
+        <div *ngIf="incorrectProjectDescription"><nz-alert nzType="error" nzMessage="{{ 'error.incorrect.project.description' | translate }}"></nz-alert></div>
+        <div class="setting-item">
+            <div class="setting-item-name">{{ 'label.project.name' | translate }}</div>
+            <div class="setting-item-value">
+                <div *ngIf="!isNameEditing && barInfo">{{ barInfo.projectName }}</div>
+                <form #nameForm="ngForm">
+                    <textarea class="edit-area" 
+                          tmcAutoFocus
+                          autosize
+                          name="name"
+                          #projectName="ngModel"
+                          required
+                          pattern="^[a-zA-Zа-яА-Я0-9\s]{3,120}$"
+                          [(ngModel)]="bufferNameValue"
+                          *ngIf="isNameEditing">
+                    </textarea>                    
+                </form>
+                <button nz-button
+                        class="mr-10"
+                        (click)="cancelNameEditing()"
+                        *ngIf="isNameEditing">
+                        {{ 'cancel' | translate }}
+                </button>
+                <button (click)="saveProjectName()" 
+                        nz-button 
+                        nzType="primary"
+                        [disabled]="nameForm.invalid"
+                        *ngIf="isNameEditing">
+                        {{ 'save.button' | translate }}
+                </button>
+            </div>
+            <div class="setting-item-action" *ngIf="!isNameEditing">
+                <a (click)="showNameEditing()">
+                    <tmc-icon [tmcIconType]="'edit'" [tmcIconSize]="'extra-small'"></tmc-icon>
+                </a>
+            </div>
+        </div>
+        <div class="setting-item">
+            <div class="setting-item-name">{{ 'label.project.description' | translate }}</div>
+            <div class="setting-item-value">
+                <div *ngIf="!isDescriptionEditing && barInfo">{{ barInfo.description }}</div>
+                <form #descriptionForm="ngForm">
+                    <textarea class="edit-area" 
+                            tmcAutoFocus
+                            autosize
+                            required
+                            name="description"
+                            pattern="[^\^\{\}\[\]]{1,5000}"
+                            [(ngModel)]="bufferDescriptionValue"
+                            *ngIf="isDescriptionEditing">                    
+                    </textarea>
+                </form>
+                <button nz-button
+                        class="mr-10"
+                        (click)="cancelDescriptionEditing()"
+                        *ngIf="isDescriptionEditing">
+                        {{ 'cancel' | translate }}
+                </button>
+                <button (click)="saveProjectDescription()"
+                         nz-button 
+                         nzType="primary" 
+                         [disabled]="descriptionForm.invalid"
+                         *ngIf="isDescriptionEditing">
+                         {{ 'save.button' | translate }}
+                </button>
+            </div>
+            <div class="setting-item-action" *ngIf="!isDescriptionEditing">
+                <a (click)="showDescriptionEditing()">
+                    <tmc-icon [tmcIconType]="'edit'" [tmcIconSize]="'extra-small'"></tmc-icon>
+                </a>
+            </div>
+        </div>
+        <div class="deletion-block db-border">
+            <div class="deletion-description">{{ 'label.flushing.project' | translate }}</div>
+            <div class="deletion-value">
+                <button nz-button
+                        nzType="danger"
+                        (click)="showFlushProjectModal()"
+                        class="danger-button">
+                    {{ 'flush.all' | translate }}
+                </button>
+            </div>
+        </div>
+        <div class="deletion-block">
+            <div class="deletion-description">{{ 'label.deleting.project' | translate }}</div>
+            <div class="deletion-value">
+                <button nz-button
+                        nzType="danger"
+                        (click)="showDeleteProjectModal()"
+                        class="danger-button">
+                    {{ 'delete.project' | translate }}
+                </button>
+            </div>
+        </div>
+    </div>
+    <ng-template #settingsModalFooter>
+        <button nz-button nzType="primary" (click)="handleSettingsModalClose()">{{ 'label.close' | translate }}</button>
+    </ng-template>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="isDeletingProjectVisible" 
+          nzTitle="{{ 'delete.project' | translate }}"
+          (nzOnCancel)="handleAlertModalsClose()" 
+          *ngIf="currentUserRole !=  enum.constants.TRANSLATOR"
+          [nzFooter]="alertModalFooterDP">
+    <div class="modal-content">{{ 'are.you.sure.deleting.project' | translate }} 
+        <div class="bold-name" *ngIf="barInfo">{{ barInfo.projectName }}?</div>
+    </div>
+    <ng-template #alertModalFooterDP>
+        <button class="cancel" (click)="handleAlertModalsClose()">{{ 'label.close' | translate }}</button>
+        <button nz-button nzType="danger" class="delete-button" (click)="handleDeleteProjectModalOk()">{{ 'delete.button' | translate }}</button>
+    </ng-template>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="isFlushingVisible" 
+          nzTitle="{{ 'flush.all' | translate }}"
+          (nzOnCancel)="handleAlertModalsClose()" 
+          [nzFooter]="alertModalFooterFA">
+    <div class="modal-content">{{ 'are.you.sure.flushing.project' | translate }}</div>
+    <ng-template #alertModalFooterFA>
+        <button class="cancel" (click)="handleAlertModalsClose()">{{ 'label.close' | translate }}</button>
+        <button nz-button nzType="danger" class="delete-button" (click)="handleFlushProjectModalOk()">{{ 'flush.button' | translate }}</button>
+    </ng-template>
+</nz-modal>
+
+

@@ -1,0 +1,42 @@
+<div class="card-container">
+  <div class="image-block">
+    <a routerLink="/profile/{{ follower.user.username }}">
+      <img *ngIf="follower.user.profilePhoto" [src]="follower.user.imageToShow"
+        class="profile-image">
+      <div class="profile-image" *ngIf="!follower.user.profilePhoto">
+        <tmc-icon [tmcIconSize]="'image-ex-large'" [tmcType]="'image'" [tmcIconType]="'default-user'"></tmc-icon>
+      </div>
+    </a>
+  </div>
+  <div class="info-block">
+    <div class="name-block">
+      <a class="router-link" routerLink="/profile/{{ follower.user.username }}">
+        {{ follower.user.firstName }} {{ follower.user.lastName }}
+      </a>
+    </div>
+    <div class="info">
+      {{ follower.user.username }}
+    </div>
+  </div>
+  <div class="action-block">
+    <button nz-button nzType="primary"
+            *ngIf="follower.role == enum.constants.GL_FOLLOWER"
+            (click)="showSendInvitationModal()"
+            class="primary-button moderator-button">
+            {{ 'label.make.moderator' | translate}}
+    </button>
+  </div>
+</div>
+
+<nz-modal [(nzVisible)]="isSendInvitationModalVisible" 
+          nzTitle="{{ 'label.make.moderator' | translate }}"
+          (nzOnCancel)="closeSendInvitationModal()" 
+          [(nzOkLoading)]="isMessageSending"
+          [nzFooter]="alertModalFooter">
+    {{ 'label.are.you.sure.send.moderator.invitation' | translate }}
+    <div class="block name">{{ follower.user.firstName }} {{ follower.user.lastName }}</div>?
+    <ng-template #alertModalFooter>
+        <button class="cancel" (click)="closeSendInvitationModal()">{{ 'label.close' | translate }}</button>
+        <button nz-button nzType="danger" class="delete-button" (click)="sendInvitation()">{{ 'label.send' | translate }}</button>
+    </ng-template>
+</nz-modal>

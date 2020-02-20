@@ -1,0 +1,150 @@
+.header-container {
+    height: 40px;
+    width: 100gh;
+    min-width: 1200px;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.header-inner-container {
+    width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-left: calc((100vw - 1200px)/2);
+}
+
+.header-left-block {
+    width: 500px;
+}
+
+.header-right-block {
+    display: flex;
+    align-items: center;
+    text-align: right;
+    float: right;
+    min-width: 300px;
+}
+
+.nav-item {
+    line-height: 1;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    line-height: normal;
+}
+
+.label {
+    padding: 0 20px 0 0;
+    font-size: 23px;
+    vertical-align: middle;
+    display: table-cell;
+    font-family: 'kreon';
+    font-weight: bold;
+    color: #729EA1;
+    cursor: pointer;
+    outline: none;
+}
+
+.link {
+    padding: 0 10px;
+    font-family: Montserrat-Medium;
+    font-style: normal;
+    font-size: 15px;
+    text-transform: uppercase;
+    vertical-align: middle;
+    display: table-cell;
+    cursor: pointer;
+    outline: none;
+    color: #868686;
+    min-width: 80px;
+}
+
+.auth-links {
+    padding: 0 10px;
+    font-family: Montserrat-Medium;
+    font-style: normal;
+    font-size: 14px;
+    text-transform: uppercase;
+    cursor: pointer;
+    outline: none;
+    color: #729EA1;
+}
+
+.auth-links:hover {
+    color: #436C75;
+}
+
+.divider {
+    width: 1px;
+    border: 1px solid #729ea1a8;
+    height: 30px;
+}
+
+.profile-drop {
+    padding-left: 10px;
+    padding-right: 5px;
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.profile-container {
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: Montserrat-Medium;
+    color: black;
+}
+
+.search-input {
+    width: 200px;
+    vertical-align: middle;
+    display: table-cell;
+}
+
+.search-field {
+    border-radius: 15px;
+}
+
+.drop-menu {
+    float: right;
+    width: 130px;
+    border-radius: 5px;
+}
+
+.profile-drop:hover {
+    background-color: rgb(240, 239, 239);
+}
+
+.profile-image {
+    margin: 0 5px 0 5px;
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+}
+
+.drop-angle {
+    font-size: 14px;
+    color: grey;
+}
+
+hr {
+    width: 80%;
+}
+
+.drop-link {
+    font-family: Montserrat-Medium;
+    text-transform: uppercase;
+    line-height: 12px;
+    font-size: 12px;
+}
+
+.name {
+    font-size: 14px;
+    font-family: Montserrat-Medium;
+}
+
+.active {
+    color: rgb(99, 96, 96);
+    font-family: Montserrat-SemiBold;
+}

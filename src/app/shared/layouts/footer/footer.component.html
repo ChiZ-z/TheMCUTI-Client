@@ -1,0 +1,9 @@
+<div class="footer-container">
+  <div class="footer-content">
+    <div class="version-block">v. {{ version }}</div>
+    <div class="lang-block">
+      <div class="lang-item" (click)="switchLanguage(enum.locals.RU)" [ngClass]="{'active-lang' : getLang() == enum.locals.RU}">RU</div>
+      <div class="lang-item" (click)="switchLanguage(enum.locals.EN)" [ngClass]="{'active-lang' : getLang() == enum.locals.EN}">EN</div>
+    </div>
+  </div>
+</div>

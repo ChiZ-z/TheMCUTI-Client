@@ -1,0 +1,32 @@
+<div class="search-item-outer"
+     (click)="goToLink()"
+     (mouseenter)="showArrow()"
+     (mouseleave)="hideArrow()" >
+  <div class="search-item {{ getBorderClass() }}">
+    <div class="content">
+      <div class="item-title"
+          *ngIf="searchItem.category == enum.constants.TERMS"
+          title="{{ searchItem.term.length > 25 ? searchItem.term : '' }}">
+        {{ searchItem.term | slice : 0 : 25 }}{{ searchItem.term.length > 25 ? '...' : '' }}
+      </div>
+      <div class="item-title" 
+          *ngIf="searchItem.category == enum.constants.TRANSLATIONS"
+          title="{{ searchItem.translation.length > 25 ? searchItem.translation : '' }}">
+        {{ searchItem.translation | slice : 0 : 25 }}{{ searchItem.translation.length > 25 ? '...' : '' }}
+      </div>
+      <div class="additional">{{ 'label.project' | translate | lowercase }} | {{ searchItem.projectName }}</div>
+      <div class="additional" 
+          *ngIf="searchItem.category == enum.constants.TRANSLATIONS"
+          title="{{ searchItem.term.length > 35 ? searchItem.term : '' }}">
+          {{ 'Term' | translate | lowercase }} |
+          {{ searchItem.term | slice : 0 : 30}}{{ searchItem.term.length > 30 ? '...' : ''}}
+      </div>
+      <div class="additional" *ngIf="searchItem.category == enum.constants.TRANSLATIONS">
+        {{ 'language' | translate | lowercase }} | {{ searchItem.lang | translate }}
+      </div>
+    </div>
+    <div class="action-item {{ getActionClass() }}" *ngIf="isShowArrow">
+      <tmc-icon [tmcIconType]="'right-arrow'"></tmc-icon>
+    </div>
+  </div>
+</div>

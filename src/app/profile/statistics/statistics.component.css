@@ -1,0 +1,107 @@
+.statistic-container{
+    min-height: 101px;
+    width: 100%;
+    margin: 0 auto 0 auto;
+    background: #EFEFEF;
+}
+
+.stats-container{
+    min-height: 101px;
+    width: 1200px;
+    margin: 0 auto 0 auto;
+}
+
+.stat-block-outer{
+    display: inline-block;
+    height: 101px;
+    width: 200px;
+    text-align: center;
+    padding-top: 17px;
+    vertical-align: top;
+}
+
+.stat-block{
+    display: inline-block;
+    min-width: 50px;
+    min-height: 32px;
+    background: #FFFFFF;
+    border: 1px solid #0EA175;
+    box-sizing: border-box;
+    border-radius: 10px;
+    box-shadow: 0px 3px 8px rgba(19, 18, 18, 0.301);
+    font-family: Montserrat-Bold;
+    font-size: 19px;
+    color: #257D63;
+    padding: 5px 20px;
+}
+
+.chart-container{
+    min-height: 300px;
+    width: 1200px;
+    margin: 0 auto 10px auto;
+}
+
+.charts-container{
+    min-height: 370px;
+    width: 1200px;
+    margin: 0 auto 5px auto;
+    border: 1px solid rgb(212, 212, 212);
+}
+
+.stat-title {
+    font-family: Montserrat-Medium;
+    font-size: 13px;
+    margin-top: 8px;
+    text-transform: lowercase;
+    height: 40px;
+}
+
+.chart-item {
+    height: 540px;
+}
+
+.settings-container-outer {
+    display: inline-block;
+    height: 40px;
+    width: 1200px;
+    margin: 5px auto 0 auto;
+}
+
+.settings-container-inner {
+    display: table-cell;
+    height: 40px;
+    width: 1200px;
+    vertical-align: middle;
+}
+
+.drop-link {
+    color: rgb(85, 83, 83);
+}
+
+.ant-btn {
+    min-width: 150px;
+    color: rgba(0, 0, 0, 0.65);
+    text-align: left;
+    font-family: Montserrat-Medium;
+    font-size: 13px;
+    height: 26px;
+    margin-bottom: 15px;
+}
+
+.btn-label {
+    width: 265px;
+}
+
+.btn-label-small {
+    width: 210px;
+}
+
+.btn-label-date {
+    width: 185px;
+}
+
+.btn-block {
+    height: 40px;
+    display: inline-block;
+    padding-top: 10px;
+}

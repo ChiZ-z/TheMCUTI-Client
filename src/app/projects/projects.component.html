@@ -1,0 +1,167 @@
+<div class="projects-container">
+  <div class="projects-info-bar">
+    <div class="projects-info-bar-inner" *ngIf="barInfo">
+      <div class="progress-block">
+        <div class="progress-cell">
+          {{ 'label.progress' | translate }} <nz-divider class="divider" nzType="vertical"></nz-divider>
+          <div class="progress-line">
+            <div class="progress-inner-line">
+              <nz-progress [nzPercent]="getAllProjectsProgress()" 
+                           [nzShowInfo]="false">
+              </nz-progress>
+            </div>
+          </div>
+          <div class="block percents">{{getAllProjectsProgress()}}%</div>
+        </div>
+      </div>
+      <div class="info-block">
+        <div class="info-item">{{barInfo.projectsCount}} {{ getProjectsCountTitle() | translate }} 
+          <nz-divider class="divider" nzType="vertical"></nz-divider>
+        </div>
+        <div class="info-item">{{barInfo.translationsCount}} {{ 'label.translations.count' | translate }} 
+          <nz-divider class="divider" nzType="vertical"></nz-divider>
+        </div>
+        <div class="info-item">{{barInfo.termsCount}} {{ getTermsCountTitle() | translate }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="tab-bar-outer">
+    <div class="tab-bar-inner">
+      <div class="button-container">
+        <div class="button-inner-container" *ngIf="projectList && !isRequestProcessing">
+          <button class="primary-button" 
+                  (click)="showAddProjectModal()" 
+                  nz-button
+                  nzType="primary">
+                  {{ 'label.add.new.project' | translate }}
+          </button>
+        </div>
+      </div>
+      <div class="tab-set">
+        <nz-tabset>
+          <nz-tab nzTitle="{{ 'show.all' | translate }}" 
+                  (nzClick)="setProjectListType(enum.constants.ALL)">
+          </nz-tab>
+          <nz-tab nzTitle="{{ 'show.my.projects' | translate }}" 
+                  (nzClick)="setProjectListType(enum.constants.MYPROJECTS)">
+          </nz-tab>
+          <nz-tab nzTitle="{{ 'show.contributing' | translate }}" 
+                  (nzClick)="setProjectListType(enum.constants.SHARED)">
+          </nz-tab>
+        </nz-tabset>
+      </div>
+    </div>
+  </div>
+  <div class="projects-content">
+    <div class="search-panel">
+      <div class="search-block">
+        <div class="search-block-inner">
+          <nz-input-group [nzPrefix]="prefixIconSearch" 
+                          [nzAddOnAfter]="suffixDrop">
+            <input type="text" 
+                   [(ngModel)]="searchValue" 
+                   nz-input 
+                   (ngModelChange)="filterProjectList()"
+                   class="input-field"
+                   placeholder="{{'search' | translate}}"
+                   (keydown.enter)="filterProjectList()">
+          </nz-input-group>
+          <ng-template #prefixIconSearch>
+            <i nz-icon type="search"></i>
+          </ng-template>
+          <ng-template #suffixDrop>
+            <nz-select class="select-width" [(ngModel)]="searchParam">
+              <nz-option [nzLabel]="getTranslation('search.by.project.name')" [nzValue]="enum.constants.PROJECTNAME"></nz-option>
+              <nz-option [nzLabel]="getTranslation('search.by.term')" [nzValue]="enum.constants.TERM"></nz-option>
+              <nz-option [nzLabel]="getTranslation('search.by.contributor')" [nzValue]="enum.constants.CONTRIBUTOR"></nz-option>
+              <nz-option [nzLabel]="getTranslation('search.by.term.lang')" [nzValue]="enum.constants.TRANSLATION"></nz-option>
+            </nz-select>
+          </ng-template>
+        </div>
+      </div>
+      <div class="sort-block">
+        <div class="sort-inner">
+          {{ 'order'| translate }}
+          <nz-dropdown [nzTrigger]="'click'" [nzPlacement]="'bottomRight'">
+            <a nz-dropdown class="drop-link">
+              {{ sortViewValue | translate }} <i nz-icon type="down"></i>
+            </a>
+            <ul nz-menu>
+              <li nz-menu-item (click)="setSortValueAndView(enum.constants.PROJECTNAME, 'sort.name')">{{ 'sort.name' | translate }}
+              </li>
+              <li nz-menu-item (click)="setSortValueAndView(enum.constants.PROGRESS, 'sort.progress')">
+                {{ 'sort.progress' | translate }}</li>
+            </ul>
+          </nz-dropdown>
+        </div>
+      </div>
+    </div>
+    <div class="loading-block" *ngIf="isRequestProcessing">
+      <nz-spin nzSimple [nzSize]="'large'"></nz-spin>
+    </div>
+    <div *ngIf="isNothingFound">
+      <nz-alert nzType="info" nzMessage="{{ 'info.nothing.found' | translate }}"></nz-alert>
+    </div>
+    <div *ngIf="isNoProjects">
+      <nz-alert nzType="info" nzMessage="{{ 'info.no.projects' | translate }}"></nz-alert>
+    </div>
+    <div class="project-list">
+      <div *ngFor="let project of projectList">
+        <tmc-project-card [project]="project"></tmc-project-card>
+      </div>
+    </div>
+    <div class="pagination-block" *ngIf="paginationInfo && projectList && paginationInfo.pageCount!=0 && !isNothingFound && !isRequestProcessing && !isNoProjects">
+      <nz-pagination (nzPageIndexChange)="pageIndexChange($event)" 
+                     (nzPageSizeChange)="pageSizeChange($event)"
+                     [nzSize]="'small'" 
+                     [(nzPageIndex)]="currentPage" 
+                     [(nzTotal)]="paginationInfo.size"
+                     [(nzPageSize)]="currentPageSize" 
+                     nzShowSizeChanger>
+      </nz-pagination>
+    </div>
+  </div>
+
+  <nz-modal [(nzVisible)]="isAddProjectModalVisible" 
+            nzOkText="{{ 'save.button' | translate }}"
+            nzTitle="{{ 'label.create.project' | translate }}" 
+            nzCancelText="{{ 'cancel' | translate }}"
+            (nzOnCancel)="handleAddProjectModalCancel()"    
+            (nzOnOk)="handleAddProjectModalOk()">
+    <div class="h-100">
+    <form [formGroup]="addProjectForm">
+      <nz-form-control>
+        <input nz-input class="form-input" name="name" autocomplete="off" formControlName="projectName" placeholder="{{ 'label.project.name' | translate }}"/>
+        <nz-form-explain *ngIf="addProjectForm.get('projectName')?.dirty && addProjectForm.get('projectName')?.errors">
+          {{ 'error.incorrect.project.name' | translate }}
+        </nz-form-explain>
+      </nz-form-control>
+      <nz-form-control>
+        <textarea nz-input 
+                  class="form-area" 
+                  autosize
+                  name="description" 
+                  formControlName="projectDescription" 
+                  placeholder="{{ 'label.project.description' | translate }}">
+        </textarea>
+        <nz-form-explain
+          *ngIf="addProjectForm.get('projectDescription')?.dirty && addProjectForm.get('projectDescription')?.errors">
+          {{ 'error.incorrect.project.description' | translate }}
+        </nz-form-explain>
+      </nz-form-control>
+      <nz-form-control>
+        <nz-select name="select-langId" 
+                   formControlName="langId" 
+                   nzShowSearch
+                   nzAllowClear
+                   nzPlaceHolder="{{ 'label.choose.default.lang' | translate }}">
+          <nz-option *ngFor="let lang of langList" nzValue="{{ lang.id }}" nzLabel="{{ lang.langName | translate}}">
+          </nz-option>
+        </nz-select>
+        <nz-form-explain *ngIf="addProjectForm.get('langId')?.dirty && addProjectForm.get('langId')?.errors">
+          {{ 'error.incorrect.lang' | translate }}
+        </nz-form-explain>
+      </nz-form-control>
+    </form>
+    </div>
+  </nz-modal>

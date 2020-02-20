@@ -1,0 +1,50 @@
+<div class="card-container">
+  <a routerLink="/projects/{{projectId}}/langs/{{lang.id}}" [queryParams]="{page : 1}">
+    <div class="info-block-outer">
+      <div class="info-block-inner">
+        <div class="percents">
+          <div class="percents-inner">
+            <nz-progress [nzPercent]="getLanguageProgress()" 
+                         nzType="circle" 
+                         nzStrokeWidth=7
+                         [nzWidth]="43">
+            </nz-progress>
+          </div>
+        </div>
+        <div class="block">
+          <div>
+            <div class="lang-title-inner">
+                <tmc-icon [tmcType]="'flag'" 
+                          [tmcIconSize]="'flag-small'" 
+                          [tmcIconType]="lang.lang.langIcon ? lang.lang.langIcon : 'Unknown.png'">
+                </tmc-icon> 
+              <div class="name-block">{{ lang.lang.langName | translate }}</div>
+              <div class="default-block" *ngIf="lang.default">{{ 'default' | translate }}</div>
+            </div>
+          </div>
+          <div>
+            <div class="lang-info-inner">
+              <div>{{ 'label.translations.count' | translate }} {{ lang.translatedCount }} / {{ lang.termsCount }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </a>
+  <div class="action-block-outer" *ngIf="role && role!= enum.constants.TRANSLATOR && !lang.default">
+    <div class="action-block-inner">
+      <nz-divider class="divider" nzType="vertical"></nz-divider>
+      <div class="action-item">
+        <a class="trash-icon" nzTitle="{{ 'delete.lang' | translate }}"
+                              nzPlacement="topRight"
+                              nz-tooltip
+                              nzCancelText="{{ 'cancel' | translate }}"
+                              nzOkText="{{ 'delete.button' | translate }}"
+                              nz-popconfirm
+                              (nzOnConfirm)="deleteLang()">
+          <tmc-icon [tmcIconType]="'trash'" [tmcIconSize]="'pre-medium'"></tmc-icon>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

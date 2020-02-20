@@ -1,0 +1,311 @@
+.card-container {
+    min-height: 66px;
+    background: #FFFFFF;
+    border: 1px solid #E9E9E9;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    text-align: left;
+    transition: 0.3s;
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.02);
+    border-left: 4px solid #E7DC73;
+    display: flex;
+    align-items: flex-start;
+}
+
+.card-container:hover {
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.info-block {
+    /* width: 675px; */
+    flex: 1;
+    padding-left: 20px;
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.categories-block {
+    /* width: 275px; */
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+
+.actions-block {
+    /* width: 175px; */
+    display: flex;
+    min-height: 64px;
+    padding: 10px 0;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.value-block {
+    font-family: Montserrat-Medium;
+    /* display: flex; */
+    align-items: center;
+}
+
+.value-row {
+    display: flex;
+    flex-direction: column;
+    padding: 7px 10px 7px 0;
+    min-height: 64px;
+    justify-content: space-around;
+}
+
+.value {
+    max-width: 600px;
+    white-space: -moz-pre-wrap;
+    white-space: -o-pre-wrap;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    font-size: 18px;
+    font-family: Montserrat-SemiBold;
+    line-height: 20px;
+}
+
+.not-exist-value {
+    max-width: 470px;
+    white-space: -moz-pre-wrap;
+    white-space: -o-pre-wrap;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    color: rgb(204, 28, 28);
+}
+
+.default-empty {
+    border-left: 4px solid rgb(204, 28, 28);
+}
+
+.lang {
+    width: 130px;
+    text-transform: uppercase;
+    color: blue;
+    font-size: 10px;
+    display: inline-block;
+}
+
+.description-block {
+    color: rgb(129, 128, 128);
+    font-size: 13px;
+    white-space: -moz-pre-wrap;
+    white-space: -o-pre-wrap;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    max-width: 600px;
+    align-items: center;
+    line-height: 17px;
+    margin: 5px 0;
+}
+
+.stats-block {
+    color: rgb(185, 184, 184);
+    font-size: 12px;
+    margin-right: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.category-small {
+    margin-right: 5px;
+    font-size: 11px;
+    padding: 0px 4px;
+    background-color: #ddf3eb;
+    color: #736767;
+    border-radius: 3px;
+    margin-bottom: 2px;
+    margin-top: 2px;
+    cursor: pointer;
+}
+
+.divider {
+    width: 1px;
+    background: rgb(196, 194, 194);
+    height: 40px;
+}
+
+.action-item {
+    padding: 6px;
+    border-radius: 5px;
+    margin: 0 6px;
+}
+
+.translation-block {
+    display: flex;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+    min-height: 35px;
+    align-items: center;
+}
+
+.translation-lang-block {
+    width: 230px;
+    padding-left: 30px;
+    font-family: Montserrat-Medium;
+    font-size: 13px;
+    text-transform: uppercase;
+    color: #111111;
+}
+
+.translation-value {
+    width: 550px;
+    padding: 5px 10px;
+    display: flex;
+}
+
+.translation-divider {
+    width: 1px;
+    height: inherit;
+    background: rgba(0, 0, 0, 0.15);
+    margin-right: 15px;
+}
+
+.translation-value-content {
+    align-items: center;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 7px;
+    white-space: -moz-pre-wrap;
+    white-space: -o-pre-wrap;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    width: 480px;
+}
+
+.edit-area {
+    width: 480px;
+    max-width: 480px;
+    min-width: 480px;
+    min-height: 40px;
+    height: 40px;
+    max-height: 300px;
+    overflow: hidden;
+    outline: none;
+    font-family: Montserrat-Medium;
+    background: rgba(196, 196, 196, 0.2);
+    border-radius: 8px;
+    padding: 1px 5px;
+}
+
+.translation-value-content-static {
+    align-items: center;
+    padding: 2px 6px;
+    border-radius: 7px;
+    white-space: -moz-pre-wrap;
+    white-space: -o-pre-wrap;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    width: 480px;
+}
+
+.translation-value-content:hover {
+    background-color: rgba(196, 196, 196, 0.2);
+}
+
+.translation-action-block {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.action-active {
+    background-color: rgba(227, 174, 39, 0.1);
+}
+
+.translations-container {
+    margin-bottom: 20px;
+}
+
+.is-disabled {
+    opacity: 0.5;
+    text-decoration: none;
+    pointer-events: none;
+}
+
+.translation-label {
+    color: grey;
+    font-family: Montserrat-Medium;
+    padding-left: 5px;
+}
+
+.item-form {
+    display: flex;
+    min-height: 40px;
+    margin-bottom: 15px;
+    border: 1px solid rgb(223, 220, 220);
+    border-left: 4px solid #e7ac3d;
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.02);
+    padding: 3px 7px;
+}
+
+.item-value {
+    width: 430px;
+    padding: 5px;
+    /* border: 1px solid black; */
+}
+
+.item-lang {
+    flex: 3;
+    padding: 1px 5px;
+    /* border: 1px solid black; */
+}
+
+.form-area {
+    max-height: 300px;
+    height: 50px;
+    min-height: 50px;
+    background-color: rgb(251, 251, 251);
+}
+
+.comment {
+    /* display: flex; */
+    align-items: center;
+}
+
+.translation-label {
+    padding-left: 5px;
+    text-align: left;
+    height: 26px;
+    color: rgba(31, 31, 31, 0.75);
+    font-family: Roboto-Regular;
+    font-size: 15px;
+    text-transform: uppercase;
+    border-bottom: 1px solid #C4C4C4;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 22px 0 14px 0;
+}
+
+.categories-selected-block {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+
+.selected-category {
+    padding: 3px 10px;
+    background-color: #e0f1eb;
+    color: #459a7b;
+    border-radius: 6px;
+    margin-right: 10px;
+    margin-bottom: 5px;
+    border: 1px solid #69CBA8;
+}
+
+.area {
+    max-height: 400px;
+    background-color: rgb(251, 251, 251);
+}
+
+.show-more {
+    font-size: 11px;
+    color: grey;
+    font-family: Montserrat-Medium;
+}
+
+.form-input {
+    background-color: rgb(251, 251, 251);
+}

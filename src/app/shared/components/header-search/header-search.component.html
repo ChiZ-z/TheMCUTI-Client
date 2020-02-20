@@ -1,0 +1,47 @@
+<div class="dropdown">
+  <div class="search-input">
+    <nz-input-group [nzPrefix]="prefixSearch">
+      <input type="text" 
+            nz-input 
+            (focusin)="showDrop()"
+            (focusout)="hideDrop()"
+            class="search-field" 
+            [(ngModel)]="searchValue"
+            (click)="clickedInside($event)" 
+            (ngModelChange)="liveSearch()"
+            (keydown.enter)="goToFullSearch()"
+            placeholder="{{'search' | translate}}">
+    </nz-input-group>
+    <ng-template #prefixSearch>
+      <i nz-icon nzType="search" nzTheme="outline"></i>
+    </ng-template>
+  </div>
+  <div class="dropdown-content" 
+       (mouseenter)="mouseOnDrop()" 
+       (mouseleave)="mouseOutOfDrop()" 
+       *ngIf="searchValue && resultSearch && showDropBlock">
+    <div class="show-all" *ngIf="!isRequestProcessing && !isNothingFound && showSeeAllTitle"><a (click)="goToFullSearch()">{{ 'title.see.all.results' | translate }}</a></div>
+    <div class="loading" *ngIf="isRequestProcessing"><nz-spin nzSimple [nzSize]="'medium'"></nz-spin></div>
+    <div *ngIf="!isRequestProcessing">
+      <div class="terms-block" *ngIf="resultSearch && countTermItems() > 0">
+        <div class="block-title">{{ 'label.terms' | translate }}</div>
+        <div *ngFor="let term of resultSearch.searchItems" >
+         <div *ngIf="term.category == enum.constants.TERMS">
+           <tmc-header-search-card [searchItem]="term" [(searchValue)]="searchValue" (dropSearchValue)="dropSearchValue()"></tmc-header-search-card>
+         </div>
+        </div>
+      </div>
+      <div class="translations-block mt-10" *ngIf="resultSearch && countTranslationItems() > 0">
+        <div class="block-title">{{ 'label.translations' | translate }}</div>
+        <div *ngFor="let translation of resultSearch.searchItems" >
+            <div *ngIf="translation.category == enum.constants.TRANSLATIONS">
+              <tmc-header-search-card [searchItem]="translation" [(searchValue)]="searchValue" (dropSearchValue)="dropSearchValue()"></tmc-header-search-card>
+            </div>
+        </div>
+      </div>
+      <div *ngIf="!isRequestProcessing && isNothingFound && searchValue">
+          <nz-alert class="info" nzType="info" nzMessage="{{ 'info.nothing.found' | translate }}"></nz-alert>
+      </div>
+    </div>
+  </div>
+</div>

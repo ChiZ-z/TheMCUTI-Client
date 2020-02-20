@@ -1,0 +1,80 @@
+<div class="card-container  {{ getBorderClass() }}">
+  <div class="info-container">
+    <div class="text-part">
+      <div class="text-part-inner">
+      <div class="block">
+        <a routerLink="/profile/{{history.username}}">{{ history.user.firstName }} {{ history.user.lastName }}</a> 
+        <div class="delete" *ngIf="checkDeleteAction()"> {{ 'label.deleted.history' | translate }}</div>
+        {{ 'action.title.' + history.action | translate }}
+        <a *ngIf="checkTermLangAction() && history.term != null" (click)="goToTerm()"><div class="wrap">{{ history.term.termValue }}</div></a>
+        <div class="block" *ngIf="checkTermLangAction()"> {{ 'label.in.lang' | translate }} </div>
+        <a class="lang" 
+          (click)="goToLang()"
+          *ngIf="history.projectLang && (checkTermLangAction() || checkProjectLandAction() || checkImportAction() || checkCreateProject())">{{ history.projectLang.lang.langName | translate }} 
+          [{{ history.projectLang.lang.langDef }}]
+        </a>
+        <!-- <a *ngIf="checkTermAction() && history.action != enum.constants.EDIT_TERM"><div class="wrap">{{ history.currentValue }}</div></a> -->
+        <a *ngIf="checkTermAction()" (click)="goToTerm()"><div class="wrap">{{ history.term.termValue }}</div></a>
+        <a *ngIf="checkContributorAction()" routerLink="/profile/{{history.contributor.username}}">{{ history.contributor.firstName }} {{ history.contributor.lastName }}</a> 
+        <div class="block" *ngIf="history.action == enum.constants.AUTO_TRANSLATE"> ({{ 'label.translated.value' | translate }} <a>{{ history.refValue }}</a>)</div>
+      </div>
+      </div>
+    </div>
+    <div class="info-part">
+      <div class="info-part-inner">
+      <div class="time" 
+           nzTitle="{{ history.date | date : 'dd.MM.yyyy HH:mm'}}"
+           nzPlacement="topRight" 
+           nz-tooltip>       
+        {{ getTimeTitle()  }}
+      </div>
+      <div class="image-block ml-5" *ngIf="!checkImportActions()">
+          <a routerLink="/profile/{{ history.user.username }}"
+              nzTitle="{{ history.user.firstName }} {{ history.user.lastName }}"
+              nzPlacement="topRight" 
+              nz-tooltip>
+            <img *ngIf="history.user.profilePhoto" [src]="history.user.imageToShow"
+              class="profile-image">
+            <div class="profile-image" *ngIf="!history.user.profilePhoto">
+              <tmc-icon [tmcIconSize]="'medium'" [tmcType]="'image'" [tmcIconType]="'default-user'"></tmc-icon>
+            </div>
+          </a>
+      </div>
+      <div class="drop-icon-block"  *ngIf="checkImportActions()">
+        <div class="drop-icon-block-inner" [ngClass]="{'glow-drop' : isDropShown}">
+          <a nzTitle="{{ ('label.' + (isDropShown ? 'hide' : 'show') + '.imported.values') | translate }}"
+             nzPlacement="topRight" 
+             (click)="isDropShown ? hideImportedValues() : showImportedValues()"
+             nz-tooltip>
+            <tmc-icon [tmcIconType]="'list'"></tmc-icon>
+          </a>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+  <div class="differences-container" *ngIf="checkShowDiffer()">
+    <div *ngFor="let diff of differenceArray" class="diff-block">
+      <div [ngClass]="{'added' : diff.added == true,'removed' : diff.removed == true, 'diff-value' : !diff.removed && !diff.added}">{{ diff.value}}</div>
+    </div>
+  </div>
+</div>
+<div class="mb-20" *ngIf="isDropShown" [@slideIn]>
+  <div class="drop-inner">
+    <nz-alert nzType="info" *ngIf="importedEvents.length == 0 && !isRequestProcessing" nzMessage="{{ 'label.no.history' | translate }}"></nz-alert>
+    <div class="imported-value" *ngFor="let hist of importedEvents">
+      <ul class="list">
+        <li>
+          <div class="block">
+            <div *ngFor="let diff of hist.differenceArray" class="diff-block">
+              <div [ngClass]="{'added' : diff.added == true,'removed' : diff.removed == true, 'diff-value' : !diff.removed && !diff.added}">{{ diff.value}}</div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="loading-block" *ngIf="isRequestProcessing">
+        <nz-spin nzSimple class="loading" [nzSize]="'large'"></nz-spin>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,101 @@
+<div class="settings-container">
+  <div class="settings-label">
+    {{ 'label.main.settings' | translate }}
+  </div>
+  <div class="settings-block" *ngIf="glossary">
+    <div class="setting-item-label">
+      <div class="setting-label-value">{{ 'label.glossary.name' | translate }}:</div>
+      <div class="edit-action" *ngIf="!isNameEditing">
+        <a (click)="showEditNameForm()">
+          {{ 'label.edit' | translate }}
+        </a>
+      </div>
+    </div>
+    <div class="glossary-setting-value" *ngIf="!isNameEditing">{{ glossary.glossaryName }}
+      <hr>
+    </div>
+    <div *ngIf="nameEditingForm && isNameEditing">
+      <form [formGroup]="nameEditingForm">
+        <nz-form-control>
+          <nz-input-group>
+            <input nz-input class="form-input" 
+                  name="name" 
+                  autocomplete="off" 
+                  (keydown.enter)="saveName()" 
+                  formControlName="glossaryName" 
+                  placeholder="{{ 'label.glossary.name' | translate }}"/>
+          </nz-input-group>
+          <nz-form-explain *ngIf="nameEditingForm.get('glossaryName')?.dirty && nameEditingForm.get('glossaryName')?.errors">
+            {{ 'error.incorrect.glossary.name' | translate }}
+          </nz-form-explain>
+        </nz-form-control>   
+        <div class="buttons-block">
+           <button nz-button type="button" nzType="primary" class="primary-button" (click)="saveName()">{{ 'save.button' | translate }}</button>
+           <button type="button" class="default-button ml-10" nz-button (click)="cancelNameEditing()">{{ 'cancel' | translate }}</button>
+        </div>     
+      </form>
+    </div>
+    <div class="setting-item-label">
+      <div class="setting-label-value">{{ 'label.glossary.description' | translate }}:</div>
+      <div class="edit-action" *ngIf="!isDescriptionEditing">
+        <a (click)="showEditDescriptionForm()">
+          {{ 'label.edit' | translate }}
+        </a>
+      </div>
+    </div>
+    <div *ngIf="descriptionEditingForm && isDescriptionEditing">
+      <form [formGroup]="descriptionEditingForm">
+        <nz-form-control>
+          <textarea nz-input 
+                    class="form-area" 
+                    autosize
+                    name="description" 
+                    formControlName="description" 
+                    placeholder="{{ 'label.glossary.description' | translate }}">
+          </textarea>
+          <nz-form-explain *ngIf="descriptionEditingForm.get('description')?.dirty && descriptionEditingForm.get('description')?.errors">
+            {{ 'error.incorrect.glossary.description' | translate }}
+          </nz-form-explain>
+        </nz-form-control>   
+        <div class="buttons-block">
+           <button type="button" nz-button type="submit" nzType="primary" class="primary-button" (click)="saveDescription()">{{ 'save.button' | translate }}</button>
+           <button type="button" class="default-button ml-10" nz-button (click)="cancelDescriptionEditing()">{{ 'cancel' | translate }}</button>
+        </div>     
+      </form>
+    </div>
+    <div class="glossary-setting-value description" *ngIf="!isDescriptionEditing">{{ glossary.description }}
+      <hr>
+    </div>
+    <div class="setting-item-label">
+      <div class="setting-label-value">{{ 'label.glossary.type' | translate }}:</div>
+      <div class="edit-action" *ngIf="!isTypeEditing">
+        <a (click)="showEditTypeForm()">
+          {{ 'label.edit' | translate }}
+        </a>
+      </div>
+    </div>
+    <div class="type" *ngIf="!isTypeEditing">
+      <i *ngIf="glossary.glossaryType == enum.constants.PRIVATE" nz-icon nzType="lock" nzTheme="outline"></i>
+      {{ ('label.type.' + glossary.glossaryType) | lowercase | translate }}
+    </div>
+    <div *ngIf="typeEditingForm && isTypeEditing">
+        <form [formGroup]="typeEditingForm">
+          <nz-form-control>
+            <nz-select name="select-type" 
+                     formControlName="type"
+                     nzPlaceHolder="{{ 'label.choose.glossary.type' | translate }}">
+                    <nz-option nzValue="{{ enum.constants.PUBLIC }}" nzLabel="{{ 'label.type.public' | translate}}"></nz-option>
+                    <nz-option nzValue="{{ enum.constants.PRIVATE }}" nzLabel="{{ 'label.type.private' | translate}}"></nz-option>
+          </nz-select>
+            <nz-form-explain *ngIf="typeEditingForm.get('type')?.dirty && typeEditingForm.get('type')?.errors">
+              {{ 'error.incorrect.glossary.type' | translate }}
+            </nz-form-explain>
+          </nz-form-control>   
+          <div class="buttons-block">
+             <button type="button" nz-button type="submit" nzType="primary" class="primary-button" (click)="saveType()">{{ 'save.button' | translate }}</button>
+             <button type="button" class="default-button ml-10" nz-button (click)="cancelTypeEditing()">{{ 'cancel' | translate }}</button>
+          </div>     
+        </form>
+    </div>
+  </div>  
+</div>

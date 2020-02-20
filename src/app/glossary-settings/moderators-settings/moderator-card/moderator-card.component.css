@@ -1,0 +1,86 @@
+.card-container {
+    width: 860px;
+    height: 66px;
+    background: #FFFFFF;
+    border: 1px solid #E9E9E9;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    text-align: left;
+    transition: 0.3s;
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.02);
+    border-left: 4px solid rgb(119, 143, 220);
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.card-container:hover {
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.image-block {
+    margin-left: 20px;
+    display: inline-block;
+    width: 70px;
+}
+
+.name-block {
+    font-family: Montserrat-Medium;
+    font-style: normal;
+    font-size: 15px;
+    color: #111111;
+}
+
+.router-link {
+    color: #111111;
+}
+
+.info {
+    font-family: Roboto-Regular;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    color: rgba(151, 151, 151, 0.65);
+    text-transform: lowercase;
+    width: 800px;
+}
+
+.moderator-button {
+    height: 26px;
+    font-size: 11px;
+    background-color: #71C8B9;
+    color: rgb(255, 255, 255);
+    border: 1px solid #71C8B9;
+    width: 220px;
+}
+
+.moderator-button:hover {
+    background-color: rgb(142, 207, 195);
+}
+
+.profile-image {
+    width: 46px;
+    height: 46px;
+    border-radius: 23px;
+    box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.14);
+}
+
+.name {
+    color: black;
+    font-weight: bold;
+}
+
+.info-block {
+    width: 600px;
+}
+
+.author {
+    border-left: 4px solid rgb(29, 40, 75);
+}
+
+.author-label {
+    padding: 0 5px;
+    border-radius: 5px;
+    background: #5c7b9b;
+    color: rgb(245, 243, 243);
+}

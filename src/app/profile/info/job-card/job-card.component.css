@@ -1,0 +1,170 @@
+.card-container {
+    width: 1200px;
+    min-height: 54px;
+    background: #FFFFFF;
+    border: 1px solid #E9E9E9;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    text-align: left;
+    transition: 0.3s;
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.02);
+    border-left: 4px solid #69AF95;
+    position: relative;
+}
+
+.card-container:hover {
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.work-place-block-outer {
+    padding-left: 20px;
+    display: inline-block;
+    width: 226px;
+    min-height: 54px;
+    vertical-align: top;
+}
+
+.work-place-block-inner {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: middle;
+    width: 226px;
+    height: 54px;
+    padding: 7px 0;
+}
+
+.position-block-outer {
+    padding-left: 32px;
+    display: inline-block;
+    width: 245px;
+    min-height: 54px;
+    vertical-align: top;
+}
+
+.position-block-inner {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: middle;
+    width: 245px;
+    height: 54px;
+    padding: 7px 0;
+}
+
+.activity-block-outer {
+    padding-left: 32px;
+    display: inline-block;
+    width: 330px;
+    min-height: 54px;
+    vertical-align: top;
+}
+
+.activity-block-inner {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: middle;
+    width: 330px;
+    height: 54px;
+    padding: 7px 0;
+}
+
+.working-period-block-outer {
+    padding-left: 32px;
+    display: inline-block;
+    width: 245px;
+    min-height: 54px;
+    vertical-align: top;
+}
+
+.working-period-block-inner {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: middle;
+    width: 248px;
+    height: 54px;
+    padding: 7px 0;
+}
+
+.action-item-outer {
+    display: inline-block;
+    width: 70px;
+    min-height: 64px;
+    vertical-align: top;
+    padding-left: 20px;
+}
+
+.action-item-inner {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    width: 70px;
+    height: 64px;
+}
+
+/* ok */
+
+.divider-block {
+    display: inline-block;
+    width: 10px;
+    position: absolute;
+    height: 100%;
+    padding: 10px 0;
+}
+
+/* ok */
+
+.divider {
+    height: 100%;
+    width: 2px;
+}
+
+.place {
+    font-family: Montserrat-Medium;
+    font-style: normal;
+    font-size: 14px;
+    line-height: 24px;
+    width: 200px;
+    white-space: -moz-pre-wrap;
+    white-space: -o-pre-wrap;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+.position {
+    font-family: Montserrat-Medium;
+    font-style: normal;
+    font-size: 14px;
+    line-height: 24px;
+    width: 200px;
+    white-space: -moz-pre-wrap;
+    white-space: -o-pre-wrap;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+.activity {
+    font-family: Montserrat-Medium;
+    font-style: normal;
+    font-size: 14px;
+    line-height: 24px;
+    width: 300px;
+    white-space: -moz-pre-wrap;
+    white-space: -o-pre-wrap;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+.period {
+    font-family: Montserrat-Medium;
+    font-style: normal;
+    font-size: 14px;
+    line-height: 24px;
+    width: 180px;
+    white-space: -moz-pre-wrap;
+    white-space: -o-pre-wrap;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+nz-form-control {
+    margin-bottom: 10px;
+}

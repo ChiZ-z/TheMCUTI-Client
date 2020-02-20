@@ -1,0 +1,56 @@
+<div class="follower-container">
+    <div class="action-block">
+      <div class="filter-block">
+        <div class="filter-block-inner">
+          <nz-input-group class="search-input" [nzPrefix]="prefixIconSearch">
+          <input type="text" [(ngModel)]="searchValue"
+                            nz-input placeholder="{{'search' | translate}}"
+                            (ngModelChange)="filterFollowerList()"
+                            (keydown.enter)="filterFollowerList()">
+          </nz-input-group>
+          <ng-template #prefixIconSearch>
+            <i nz-icon type="search"></i>
+          </ng-template>
+          {{ 'order'| translate }}
+          <nz-dropdown class="block" [nzTrigger]="'click'">
+            <a nz-dropdown class="drop-link">
+              {{ sortViewValue | translate }} <i nz-icon type="down"></i>
+            </a>
+            <ul nz-menu>
+              <li nz-menu-item (click)="setSortValueAndView(enum.constants.USERNAME, 'sort.username')">
+                {{ 'sort.username' | translate }}
+              </li>
+              <li nz-menu-item (click)="setSortValueAndView(enum.constants.USERFIRSTNAME, 'sort.first.name')">
+                {{ 'sort.first.name' | translate }}
+              </li>
+              <li nz-menu-item (click)="setSortValueAndView(enum.constants.USERLASTNAME, 'sort.surname')">
+                {{ 'sort.surname' | translate }}
+              </li>
+            </ul>
+          </nz-dropdown>
+        </div>
+      </div>
+    </div>
+    <div class="loading-block" *ngIf="isRequestProcessing">
+      <nz-spin nzSimple class="loading" [nzSize]="'large'"></nz-spin>
+    </div>
+    <div *ngIf="isNothingFound && !isRequestProcessing">
+      <nz-alert nzType="info" nzMessage="{{ 'info.nothing.found' | translate }}"></nz-alert>
+    </div>
+    <div *ngIf="isNoFollowers && !isRequestProcessing">
+      <nz-alert nzType="info" nzMessage="{{ 'info.no.followers' | translate }}"></nz-alert>
+    </div>
+    <div *ngFor="let follower of followersList">
+      <tmc-follower-card [(follower)]="follower" [glossaryId]="currentGlossaryId"></tmc-follower-card>
+    </div>  
+    <div class="pagination-block" *ngIf="!isRequestProcessing && pageParams && pageParams.pageCount!=0">
+      <nz-pagination (nzPageIndexChange)="pageIndexChange($event)" 
+                     (nzPageSizeChange)="pageSizeChange($event)"
+                     [nzSize]="'small'" 
+                     [(nzPageIndex)]="currentPage" 
+                     [nzTotal]="pageParams.size"
+                     [(nzPageSize)]="currentPageSize" 
+                     nzShowSizeChanger>
+      </nz-pagination>
+    </div>
+  </div>

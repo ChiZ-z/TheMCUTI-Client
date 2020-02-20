@@ -1,0 +1,200 @@
+<div class="glossary-container">
+  <div class="glossary-info-bar">
+    <div class="glossary-info-bar-inner" *ngIf="infoItem">
+      <div class="info-block">
+        <div class="glossary-name-outer">
+          <div class="glossary-name-inner">
+            {{ 'label.glossaries' | translate | uppercase}}
+          </div>
+        </div>
+        <div class="stats-block-outer">
+          <div class="stats-block-inner">
+            <div
+              class="block info-item">{{ infoItem.glossaryCount }} {{ getCountTitle('glossary', infoItem.glossaryCount) | translate }}
+            </div>
+            <nz-divider class="divider-info" nzType="vertical"></nz-divider>
+            <div
+              class="block info-item">{{ infoItem.wordsCount }} {{ getCountTitle('word', infoItem.wordsCount) | translate }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="tab-bar-outer">
+    <div class="tab-bar-inner">
+      <div class="tab-set">
+        <nz-tabset [nzSelectedIndex]="currentTabIndex">
+          <nz-tab nzTitle="{{ 'label.my.glossaries' | translate }}"
+                  (nzClick)="activateRouterLink(enum.constants.MYGLOSSARIES)">
+          </nz-tab>
+          <nz-tab nzTitle="{{ 'label.added' | translate }}" (nzClick)="activateRouterLink(enum.constants.ADDED)">
+          </nz-tab>
+          <nz-tab nzTitle="{{ 'label.market' | translate }}" (nzClick)="activateRouterLink(enum.constants.MARKET)">
+          </nz-tab>
+          <!-- <nz-tab nzTitle="{{ 'label.market' | translate }}"
+             (nzClick)="activateRouterLink('contributors', true)">
+          </nz-tab> -->
+        </nz-tabset>
+      </div>
+    </div>
+  </div>
+  <!-- <router-outlet></router-outlet> -->
+  <div class="added-glossary-container">
+    <div class="action-block">
+      <div class="filter-block">
+        <div class="filter-block-inner">
+          <nz-input-group class="search-input" [nzPrefix]="prefixIconSearch">
+            <input type="text" [(ngModel)]="searchValue"
+                   nz-input placeholder="{{'search' | translate}}"
+                   (ngModelChange)="filterGlossariesList()"
+                   (keydown.enter)="filterGlossariesList()">
+          </nz-input-group>
+          <ng-template #prefixIconSearch>
+            <i nz-icon type="search"></i>
+          </ng-template>
+          {{ 'order'| translate }}
+          <nz-dropdown class="block mr-20" [nzTrigger]="'click'">
+            <a nz-dropdown class="drop-link">
+              {{ sortViewValue | translate }} <i nz-icon type="down"></i>
+            </a>
+            <ul nz-menu>
+              <li nz-menu-item *ngIf="glossaryType == enum.constants.MARKET"
+                  (click)="setSortValueAndView(enum.constants.POPULARITY, 'sort.popularity')">
+                {{ 'sort.popularity' | translate }}
+              </li>
+              <li nz-menu-item (click)="setSortValueAndView(enum.constants.CREATIONDATE, 'sort.creation.date')">
+                {{ 'sort.creation.date' | translate }}
+              </li>
+              <li nz-menu-item (click)="setSortValueAndView(enum.constants.GLOSSARYNAME, 'sort.glossary.name')">
+                {{ 'sort.glossary.name' | translate }}
+              </li>
+              <li nz-menu-item (click)="setSortValueAndView(enum.constants.GROUPSAMOUNT, 'sort.groups.amount')">
+                {{ 'sort.groups.amount' | translate }}
+              </li>
+              <li nz-menu-item
+                  (click)="setSortValueAndView(enum.constants.TRANSLATIONSAMOUNT, 'sort.translations.amount')">
+                {{ 'sort.translations.amount' | translate }}
+              </li>
+            </ul>
+          </nz-dropdown>
+          <div class="block" *ngIf="glossaryType != enum.constants.MARKET">
+            {{ 'show'| translate }}
+            <nz-dropdown class="block" [nzTrigger]="'click'">
+              <a nz-dropdown class="drop-link">
+                {{ filterViewValue | translate }} <i nz-icon type="down"></i>
+              </a>
+              <ul nz-menu>
+                <li nz-menu-item (click)="setFilterValueAndView(enum.constants.ALL, 'filter.all.glossaries')">
+                  {{ 'filter.all.glossaries' | translate }}
+                </li>
+                <li nz-menu-item (click)="setFilterValueAndView(enum.constants.PUBLIC, 'filter.public.glossaries')">
+                  {{ 'filter.public.glossaries' | translate }}
+                </li>
+                <li nz-menu-item (click)="setFilterValueAndView(enum.constants.PRIVATE, 'filter.private.glossaries')">
+                  {{ 'filter.private.glossaries' | translate }}
+                </li>
+              </ul>
+            </nz-dropdown>
+          </div>
+        </div>
+      </div>
+      <div class="add-glossary-block" *ngIf="isAddButtonShown">
+        <div class="add-glossary-block-inner">
+          <button nz-button nzType="primary"
+                  (click)="showAddGlossaryModal()"
+                  class="primary-button">
+            {{ 'label.add.glossary' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="loading-block" *ngIf="isRequestProcessing">
+      <nz-spin nzSimple [nzSize]="'large'"></nz-spin>
+    </div>
+    <div *ngIf="isNothingFound && !isRequestProcessing && !isIndexChanging">
+      <nz-alert nzType="info" nzMessage="{{ 'info.nothing.found' | translate }}"></nz-alert>
+    </div>
+    <div *ngIf="glossaryType == enum.constants.ADDED && isNoGlossaries && !isRequestProcessing && !isIndexChanging">
+      <nz-alert nzType="info" nzMessage="{{ 'info.no.added.glossaries' | translate }}"></nz-alert>
+    </div>
+    <div
+      *ngIf="glossaryType == enum.constants.MYGLOSSARIES && isNoGlossaries && !isRequestProcessing && !isIndexChanging">
+      <nz-alert nzType="info" nzMessage="{{ 'info.no.your.glossaries' | translate }}"></nz-alert>
+    </div>
+    <div *ngIf="glossaryType == enum.constants.MARKET && isNoGlossaries && !isRequestProcessing && !isIndexChanging">
+      <nz-alert nzType="info" nzMessage="{{ 'info.no.market.glossaries' | translate }}"></nz-alert>
+    </div>
+    <div *ngFor="let glossary of glossaryList">
+      <tmc-glossary-card [(glossary)]="glossary"></tmc-glossary-card>
+    </div>
+    <div class="pagination-block" *ngIf="!isRequestProcessing && pageParams && pageParams.pageCount!=0">
+      <nz-pagination (nzPageIndexChange)="pageIndexChange($event)"
+                     (nzPageSizeChange)="pageSizeChange($event)"
+                     [nzSize]="'small'"
+                     [(nzPageIndex)]="currentPage"
+                     [nzTotal]="pageParams.size"
+                     [(nzPageSize)]="currentPageSize"
+                     nzShowSizeChanger>
+      </nz-pagination>
+    </div>
+  </div>
+
+  <nz-modal [(nzVisible)]="isAddGlossaryModalVisible"
+            nzOkText="{{ 'save.button' | translate }}"
+            nzTitle="{{ 'label.create.glossary' | translate }}"
+            nzCancelText="{{ 'cancel' | translate }}"
+            (nzOnCancel)="closeAddGlossaryModal()"
+            (nzOnOk)="createGlossary()">
+    <div class="h-100">
+      <form [formGroup]="addGlossaryForm">
+        <nz-form-control>
+          <input nz-input class="form-input" name="name" autocomplete="off" formControlName="glossaryName"
+                 placeholder="{{ 'label.glossary.name' | translate }}"/>
+          <nz-form-explain
+            *ngIf="addGlossaryForm.get('glossaryName')?.dirty && addGlossaryForm.get('glossaryName')?.errors">
+            {{ 'error.incorrect.glossary.name' | translate }}
+          </nz-form-explain>
+        </nz-form-control>
+        <nz-form-control>
+        <textarea nz-input
+                  class="form-area"
+                  autosize
+                  name="description"
+                  formControlName="description"
+                  placeholder="{{ 'label.glossary.description' | translate }}">
+        </textarea>
+          <nz-form-explain
+            *ngIf="addGlossaryForm.get('description')?.dirty && addGlossaryForm.get('description')?.errors">
+            {{ 'error.incorrect.glossary.description' | translate }}
+          </nz-form-explain>
+        </nz-form-control>
+        <nz-form-control>
+          <nz-select name="select-type"
+                     formControlName="type"
+                     nzPlaceHolder="{{ 'label.choose.glossary.type' | translate }}">
+            <nz-option nzValue="{{ enum.constants.PUBLIC }}" nzLabel="{{ 'label.type.public' | translate}}"></nz-option>
+            <nz-option nzValue="{{ enum.constants.PRIVATE }}"
+                       nzLabel="{{ 'label.type.private' | translate}}"></nz-option>
+          </nz-select>
+          <nz-form-explain
+            *ngIf="addGlossaryForm.get('type')?.dirty && addGlossaryForm.get('type')?.errors">
+            {{ 'label.choose.glossary.type' | translate }}
+          </nz-form-explain>
+        </nz-form-control>
+        <nz-form-control>
+          <nz-select name="select-langId"
+                     formControlName="langId"
+                     nzShowSearch
+                     nzAllowClear
+                     nzPlaceHolder="{{ 'label.choose.default.lang' | translate }}">
+            <nz-option *ngFor="let lang of langList" nzValue="{{ lang.id }}" nzLabel="{{ lang.langName | translate}}">
+            </nz-option>
+          </nz-select>
+          <nz-form-explain *ngIf="addGlossaryForm.get('langId')?.dirty && addGlossaryForm.get('langId')?.errors">
+            {{ 'error.incorrect.lang' | translate }}
+          </nz-form-explain>
+        </nz-form-control>
+      </form>
+    </div>
+  </nz-modal>
+</div>
